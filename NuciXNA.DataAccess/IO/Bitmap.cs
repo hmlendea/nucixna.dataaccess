@@ -55,7 +55,7 @@ namespace NuciXNA.DataAccess.IO
         /// <param name="fileName">File name.</param>
         Bitmap(string fileName)
         {
-            sourceImage = Image.Load(fileName);
+            sourceImage = Image.Load<Rgba32>(fileName);
 
             Size = new Size2D(sourceImage.Width, sourceImage.Height);
         }
