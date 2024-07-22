@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="NuciXNA.Primitives" Version="2.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
   </ItemGroup>
 
 </Project>
