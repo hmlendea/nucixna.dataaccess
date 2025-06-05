@@ -1,14 +1,11 @@
 using System;
 
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
-
 using Moq;
 using NUnit.Framework;
 
 using NuciXNA.DataAccess.Content;
 
-namespace NuciXNA.UnitTests.DataAccess.Content
+namespace NuciXNA.DataAccess.UnitTests.Content
 {
     public class ContentManagerTests
     {
@@ -31,10 +28,10 @@ namespace NuciXNA.UnitTests.DataAccess.Content
         {
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()));
-            
+
             plainFileContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()));
-            
+
             Assert.DoesNotThrow(() => NuciContentManager.Instance.LoadSoundEffect("testSoundEffect"));
         }
 
@@ -43,10 +40,10 @@ namespace NuciXNA.UnitTests.DataAccess.Content
         {
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()));
-            
+
             plainFileContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()));
-            
+
             Assert.DoesNotThrow(() => NuciContentManager.Instance.LoadSoundEffect("testSoundEffect"));
         }
 
@@ -56,10 +53,10 @@ namespace NuciXNA.UnitTests.DataAccess.Content
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             plainFileContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()));
-            
+
             Assert.DoesNotThrow(() => NuciContentManager.Instance.LoadSoundEffect("testSoundEffect"));
         }
 
@@ -69,11 +66,11 @@ namespace NuciXNA.UnitTests.DataAccess.Content
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             plainFileContentLoaderMock
                 .Setup(x => x.LoadSoundEffect(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             Assert.Throws<Exception>(() => NuciContentManager.Instance.LoadSoundEffect("testSoundEffect"));
         }
 
@@ -82,7 +79,7 @@ namespace NuciXNA.UnitTests.DataAccess.Content
         {
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSpriteFont(It.IsAny<string>()));
-            
+
             Assert.DoesNotThrow(() => NuciContentManager.Instance.LoadSpriteFont("testSpriteFont"));
         }
 
@@ -92,7 +89,7 @@ namespace NuciXNA.UnitTests.DataAccess.Content
             pipelineContentLoaderMock
                 .Setup(x => x.LoadSpriteFont(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             Assert.Throws<Exception>(() => NuciContentManager.Instance.LoadSpriteFont("testSpriteFont"));
         }
 
@@ -102,11 +99,11 @@ namespace NuciXNA.UnitTests.DataAccess.Content
             pipelineContentLoaderMock
                 .Setup(x => x.LoadTexture2D(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             plainFileContentLoaderMock
                 .Setup(x => x.LoadTexture2D(It.IsAny<string>()))
                 .Throws<Exception>();
-            
+
             Assert.Throws<Exception>(() => NuciContentManager.Instance.LoadTexture2D("testTexture2D"));
         }
     }

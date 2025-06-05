@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -13,7 +12,7 @@ namespace NuciXNA.DataAccess.IO
     /// </summary>
     public class Bitmap : IDisposable
     {
-        Image<Rgba32> sourceImage;
+        readonly Image<Rgba32> sourceImage;
 
         /// <summary>
         /// Gets the size.
@@ -25,10 +24,7 @@ namespace NuciXNA.DataAccess.IO
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
         /// </summary>
         /// <param name="sourceImage">Source image.</param>
-        public Bitmap(Image<Rgba32> sourceImage)
-        {
-            this.sourceImage = sourceImage;
-        }
+        public Bitmap(Image<Rgba32> sourceImage) => this.sourceImage = sourceImage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
@@ -46,8 +42,7 @@ namespace NuciXNA.DataAccess.IO
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
         /// </summary>
         /// <param name="size">Size.</param>
-        public Bitmap(Size2D size)
-            : this(size.Width, size.Height) { }
+        public Bitmap(Size2D size) : this(size.Width, size.Height) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
@@ -81,9 +76,8 @@ namespace NuciXNA.DataAccess.IO
         public Colour GetPixel(int x, int y)
         {
             Rgba32 pixel = sourceImage[x, y];
-            Colour colour = Colour.FromArgb(pixel.A, pixel.R, pixel.G, pixel.B);
 
-            return colour;
+            return Colour.FromArgb(pixel.A, pixel.R, pixel.G, pixel.B);
         }
 
         /// <summary>
@@ -92,9 +86,7 @@ namespace NuciXNA.DataAccess.IO
         /// <param name="location">The location of the pixel.</param>
         /// <returns>Pixel colour.</returns>
         public Colour GetPixel(Point2D location)
-        {
-            return GetPixel(location.X, location.Y);
-        }
+            => GetPixel(location.X, location.Y);
 
         /// <summary>
         /// Sets the colour of the specified pixel.
@@ -103,10 +95,7 @@ namespace NuciXNA.DataAccess.IO
         /// <param name="y">The Y coordinate of the pixel.</param>
         /// <param name="colour">Pixel colour.</param>
         public void SetPixel(int x, int y, Colour colour)
-        {
-            Rgba32 pixel = new Rgba32(colour.R, colour.G, colour.B, colour.A);
-            sourceImage[x, y] = pixel;
-        }
+            => sourceImage[x, y] = new(colour.R, colour.G, colour.B, colour.A);
 
         /// <summary>
         /// Sets the colour of the specified pixel.
@@ -114,19 +103,11 @@ namespace NuciXNA.DataAccess.IO
         /// <param name="location">The location of the pixel.</param>
         /// <param name="colour">Pixel colour.</param>
         public void SetPixel(Point2D location, Colour colour)
-        {
-            SetPixel(location.X, location.Y, colour);
-        }
+            => SetPixel(location.X, location.Y, colour);
 
-        public static Bitmap Load(string fileName)
-        {
-            return new Bitmap(fileName);
-        }
+        public static Bitmap Load(string fileName) => new(fileName);
 
-        public void Save(string fileName)
-        {
-            sourceImage.Save(fileName);
-        }
+        public void Save(string fileName) => sourceImage.Save(fileName);
 
         /// <summary>
         /// Releases all resource used by the <see cref="Bitmap"/> object.
@@ -135,9 +116,6 @@ namespace NuciXNA.DataAccess.IO
         /// <see cref="Dispose"/> method leaves the <see cref="Bitmap"/> in an unusable state. After
         /// calling <see cref="Dispose"/>, you must release all references to the <see cref="Bitmap"/>
         /// so the garbage collector can reclaim the memory that the <see cref="Bitmap"/> was occupying.</remarks>
-        public void Dispose()
-        {
-            sourceImage.Dispose();
-        }
+        public void Dispose() => sourceImage.Dispose();
     }
 }

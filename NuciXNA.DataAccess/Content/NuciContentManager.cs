@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-
+﻿using System.Threading;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +11,7 @@ namespace NuciXNA.DataAccess.Content
     public class NuciContentManager
     {
         static volatile NuciContentManager instance;
-        static object syncRoot = new object();
+        static readonly Lock syncRoot = new();
 
         /// <summary>
         /// Gets the instance.
@@ -27,10 +25,7 @@ namespace NuciXNA.DataAccess.Content
                 {
                     lock (syncRoot)
                     {
-                        if (instance == null)
-                        {
-                            instance = new NuciContentManager();
-                        }
+                        instance ??= new NuciContentManager();
                     }
                 }
 
@@ -44,7 +39,7 @@ namespace NuciXNA.DataAccess.Content
         /// </summary>
         /// <value>The path to the content file.</value>
         public static string MissingTexturePlaceholder { get; set; }
-        
+
         private IContentLoader pipelineContentLoader;
 
         private IContentLoader plainFileContentLoader;
@@ -67,8 +62,8 @@ namespace NuciXNA.DataAccess.Content
         /// <param name="graphicsDevice">Graphics device.</param>
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            this.pipelineContentLoader = new PipelineContentLoader(content);
-            this.plainFileContentLoader = new PlainFileContentLoader(graphicsDevice);
+            pipelineContentLoader = new PipelineContentLoader(content);
+            plainFileContentLoader = new PlainFileContentLoader(graphicsDevice);
         }
 
         /// <summary>
@@ -80,10 +75,7 @@ namespace NuciXNA.DataAccess.Content
         {
             SoundEffect soundEffect = pipelineContentLoader.TryLoadSoundEffect(contentFile);
 
-            if (soundEffect is null)
-            {
-                soundEffect = plainFileContentLoader.LoadSoundEffect(contentFile);
-            }
+            soundEffect ??= plainFileContentLoader.LoadSoundEffect(contentFile);
 
             return soundEffect;
         }
@@ -94,11 +86,7 @@ namespace NuciXNA.DataAccess.Content
         /// <returns>The sprite font.</returns>
         /// <param name="contentPath">The path to the content (without extension).</param>
         public SpriteFont LoadSpriteFont(string contentPath)
-        {
-            SpriteFont spriteFont = pipelineContentLoader.LoadSpriteFont(contentPath);
-
-            return spriteFont;
-        }
+            => pipelineContentLoader.LoadSpriteFont(contentPath);
 
         /// <summary>
         /// Loads a 2D texture either from the Content Pipeline or from disk (PNGs only).
@@ -126,7 +114,7 @@ namespace NuciXNA.DataAccess.Content
             {
                 texture2d = pipelineContentLoader.LoadTexture2D(MissingTexturePlaceholder);
             }
-            
+
             return texture2d;
         }
     }
