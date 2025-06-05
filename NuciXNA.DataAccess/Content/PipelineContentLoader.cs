@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,18 +7,10 @@ namespace NuciXNA.DataAccess.Content
     /// <summary>
     /// An <see cref="IContentLoader"> that can load resources from the XNA Content Pipeline.
     /// </summary>
-    public class PipelineContentLoader : ContentLoader, IContentLoader
+    /// <param name="content">The XNA content manager.</param>
+    public class PipelineContentLoader(ContentManager content) : ContentLoader, IContentLoader
     {
-        ContentManager content;
-
-        /// <summary>
-        /// Initialised a new instance of the <see cref="PipelineContentLoader"> class.
-        /// </summary>
-        /// <param name="content">The XNA content manager.</param>
-        public PipelineContentLoader(ContentManager content)
-        {
-            this.content = content;
-        }
+        readonly ContentManager content = content;
 
         /// <summary>
         /// Loads a sound effect from the Content Pipeline.
@@ -30,7 +19,7 @@ namespace NuciXNA.DataAccess.Content
         /// <param name="contentPath">The path to the content (without extension).</param>
         public override SoundEffect LoadSoundEffect(string contentPath)
             => content.Load<SoundEffect>(contentPath);
-        
+
         /// <summary>
         /// Loads a sprite font from the Content Pipeline.
         /// </summary>

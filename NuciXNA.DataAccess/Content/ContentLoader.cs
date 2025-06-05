@@ -1,8 +1,4 @@
-using System;
-using System.IO;
-
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace NuciXNA.DataAccess.Content
@@ -18,7 +14,7 @@ namespace NuciXNA.DataAccess.Content
         /// <returns>The sound effect.</returns>
         /// <param name="resourcePath">The path to the file (without extension).</param>
         public abstract SoundEffect LoadSoundEffect(string resourcePath);
-        
+
         /// <summary>
         /// Tries to load a sound effect.
         /// </summary>
