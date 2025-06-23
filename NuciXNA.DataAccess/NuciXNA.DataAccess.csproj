@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>NuciXNA.DataAccess</RootNamespace>
-    <Version>3.0.3</Version>
+    <Version>4.0.0</Version>
     <Description>Data access layer for NuciXNA</Description>
     <Authors>Horațiu Mlendea</Authors>
     <Copyright>Copyright 2025 © Horațiu Mlendea</Copyright>
