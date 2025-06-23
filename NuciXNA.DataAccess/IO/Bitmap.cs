@@ -24,7 +24,12 @@ namespace NuciXNA.DataAccess.IO
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
         /// </summary>
         /// <param name="sourceImage">Source image.</param>
-        public Bitmap(Image<Rgba32> sourceImage) => this.sourceImage = sourceImage;
+        public Bitmap(Image<Rgba32> sourceImage)
+        {
+            this.sourceImage = sourceImage;
+
+            Size = new Size2D(sourceImage.Width, sourceImage.Height);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bitmap"/> class.
