@@ -55,12 +55,23 @@ namespace NuciXNA.DataAccess.IO
             Size = new Size2D(sourceImage.Width, sourceImage.Height);
         }
 
+        /// <summary>
+        /// Gets or sets the colour of the pixel at the specified coordinates.
+        /// </summary>
+        /// <param name="x">The X-axis coordinate of the pixel.</param>
+        /// <param name="y">The Y-axis coordinate of the pixel.</param>
+        /// <returns>The colour of the specified pixel.</returns>
         public Colour this[int x, int y]
         {
             get => GetPixel(x, y);
             set => SetPixel(x, y, value);
         }
 
+        /// <summary>
+        /// Gets or sets the colour of the pixel at the specified point.
+        /// </summary>
+        /// <param name="point">The point representing the pixel location.</param>
+        /// <returns>The colour of the specified pixel.</returns>
         public Colour this[Point2D point]
         {
             get => GetPixel(point);
@@ -105,8 +116,17 @@ namespace NuciXNA.DataAccess.IO
         public void SetPixel(Point2D location, Colour colour)
             => SetPixel(location.X, location.Y, colour);
 
+        /// <summary>
+        /// Loads a bitmap from the specified file.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <returns>A new <see cref="Bitmap"/> instance.</returns>
         public static Bitmap Load(string fileName) => new(fileName);
 
+        /// <summary>
+        /// Saves the bitmap to the specified file.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
         public void Save(string fileName) => sourceImage.Save(fileName);
 
         /// <summary>
