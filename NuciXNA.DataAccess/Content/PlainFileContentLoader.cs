@@ -20,12 +20,7 @@ namespace NuciXNA.DataAccess.Content
         /// <returns>The sound effect.</returns>
         /// <param name="contentPath">The path to the content (without extension).</param>
         public override SoundEffect LoadSoundEffect(string contentPath)
-        {
-            FileStream fileStream = GetContentFileStream($"{contentPath}.wav");
-            SoundEffect soundEffect = SoundEffect.FromStream(fileStream);
-
-            return soundEffect;
-        }
+            => SoundEffect.FromStream(GetContentFileStream($"{contentPath}.wav"));
 
         /// <summary>
         /// Loads a sprite font from the Content Pipeline.
@@ -41,12 +36,7 @@ namespace NuciXNA.DataAccess.Content
         /// <returns>The 2D texture.</returns>
         /// <param name="contentPath">The path to the content (without extension).</param>
         public override Texture2D LoadTexture2D(string contentPath)
-        {
-            FileStream fileStream = GetContentFileStream($"{contentPath}.png");
-            Texture2D texture2D = Texture2D.FromStream(GraphicsDevice, fileStream);
-
-            return texture2D;
-        }
+            => Texture2D.FromStream(GraphicsDevice, GetContentFileStream($"{contentPath}.png"));
 
         private static FileStream GetContentFileStream(string filePath)
             => File.OpenRead(filePath);
