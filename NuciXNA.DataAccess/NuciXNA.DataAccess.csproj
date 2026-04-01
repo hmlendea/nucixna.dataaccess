@@ -9,7 +9,7 @@
     <Copyright>Copyright 2026 © Horațiu Mlendea</Copyright>
     <RepositoryUrl>https://github.com/hmlendea/nucixna.dataaccess</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-    <PackageTags>XNA MonoGame</PackageTags>
+    <PackageTags>XNA MonoGame DataAccess</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
