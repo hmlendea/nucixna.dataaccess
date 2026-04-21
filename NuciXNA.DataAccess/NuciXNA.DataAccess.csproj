@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>NuciXNA.DataAccess</RootNamespace>
-    <Version>4.0.1</Version>
+    <Version>4.0.3</Version>
     <Description>Data access utilities for the NuciXNA ecosystem, built on top of MonoGame/XNA.</Description>
     <Authors>Horațiu Mlendea</Authors>
     <Copyright>Copyright 2026 © Horațiu Mlendea</Copyright>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
-    <PackageReference Include="NuciXNA.Primitives" Version="2.1.2" />
+    <PackageReference Include="NuciXNA.Primitives" Version="2.1.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 
