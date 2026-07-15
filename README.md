@@ -106,16 +106,48 @@ dotnet pack NuciXNA.DataAccess -c Release
 | Package | Purpose |
 |---------|---------|
 | `MonoGame.Framework.DesktopGL` | XNA/MonoGame types (`Texture2D`, `SoundEffect`, `SpriteFont`, `GraphicsDevice`) |
-| `NuciXNA.Primitives` | `Colour`, `Point2D`, `Size2D` used by the bitmap utility |
+| `NuciXNA.Primitives` | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
 | `SixLabors.ImageSharp` | Pixel-level image decoding and encoding for `Bitmap` |
+
+## 🗂️ Project Structure
+
+The solution contains the following projects:
+
+- `NuciXNA.DataAccess`: The main library with content loading and bitmap utilities.
+- `NuciXNA.DataAccess.UnitTests`: Unit tests for the main library.
+
+The key directories inside `NuciXNA.DataAccess/` are:
+
+| Directory | Purpose |
+|-----------|---------|
+| `Content/` | Content loading infrastructure (`IContentLoader`, `ContentLoader`, `NuciContentManager`, `PipelineContentLoader`, `PlainFileContentLoader`) |
+| `IO/` | File I/O utilities (`Bitmap`) |
+
+## 🤝 Contributing
+
+Contributions are welcome. Please:
+- Keep the changes cross-platform
+- Keep the existing public contract intact unless a breaking change is intentional
+- Keep the pull requests focused and consistent with the existing code style
+- Update the documentation when behaviour changes
+- Properly test all changes, including edge cases and error conditions
+- Add unit tests for any new or changed functionality
 
 ## 🔗 Related Projects
 
-- [NuciXNA.Graphics](https://github.com/hmlendea/nucixna.graphics)
-- [NuciXNA.GUI](https://github.com/hmlendea/nucixna.gui)
-- [NuciXNA.Input](https://github.com/hmlendea/nucixna.input)
-- [NuciXNA.Primitives](https://github.com/hmlendea/nucixna.primitives)
+- [NuciXNA.Graphics](https://github.com/hmlendea/nucixna.graphics): Rendering and graphics utilities for the NuciXNA ecosystem
+- [NuciXNA.GUI](https://github.com/hmlendea/nucixna.gui): GUI controls and screen management for NuciXNA games
+- [NuciXNA.Input](https://github.com/hmlendea/nucixna.input): Input handling (keyboard, mouse, gamepad) for NuciXNA games
+- [NuciXNA.Primitives](https://github.com/hmlendea/nucixna.primitives): Primitive types (`Colour`, `Point2D`, `Size2D`) shared across the NuciXNA ecosystem
 
-## 📜 License
+## 💝 Support
 
-Licensed under the [GNU General Public License v3.0](./LICENSE) or later.
+Found a bug or have a suggestion? [Open an issue](https://github.com/hmlendea/nucixna.dataaccess/issues)!
+
+If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or giving a ⭐️ on GitHub!
+
+## 📄 License
+
+Licensed under the `GNU General Public License v3.0` or later.
+See [LICENSE](./LICENSE) for details.
+
