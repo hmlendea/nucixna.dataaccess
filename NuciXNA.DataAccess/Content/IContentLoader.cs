@@ -3,48 +3,46 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NuciXNA.DataAccess.Content
 {
+    /// <summary>Defines a contract for loading XNA/MonoGame content assets.</summary>
     public interface IContentLoader
     {
-        /// <summary>
-        /// Loads a sound effect either from the Content Pipeline or from disk (WAVs only).
-        /// </summary>
-        /// <returns>The sound effect.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <summary>Loads a <see cref="SoundEffect"/> from the specified content path.</summary>
+        /// <param name="contentPath">The path to the sound effect asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SoundEffect"/>.</returns>
         SoundEffect LoadSoundEffect(string contentPath);
 
         /// <summary>
-        /// Tries to load a sound effect either from the Content Pipeline or from disk (WAVs only).
+        /// Attempts to load a <see cref="SoundEffect"/> from the specified content path.
+        /// Returns <c>null</c> instead of throwing if the asset cannot be loaded.
         /// </summary>
-        /// <returns>The sound effect if it can be loaded, null otherwise.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <param name="contentPath">The path to the sound effect asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SoundEffect"/>, or <c>null</c> if loading fails.</returns>
         SoundEffect TryLoadSoundEffect(string contentPath);
 
-        /// <summary>
-        /// Loads a sprite font.
-        /// </summary>
-        /// <returns>The sprite font.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <summary>Loads a <see cref="SpriteFont"/> from the specified content path.</summary>
+        /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SpriteFont"/>.</returns>
         SpriteFont LoadSpriteFont(string contentPath);
 
         /// <summary>
-        /// Tries to load a sprite font.
+        /// Attempts to load a <see cref="SpriteFont"/> from the specified content path.
+        /// Returns <c>null</c> instead of throwing if the asset cannot be loaded.
         /// </summary>
-        /// <returns>The sprite font if it can be loaded, null otherwise.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SpriteFont"/>, or <c>null</c> if loading fails.</returns>
         SpriteFont TryLoadSpriteFont(string contentPath);
 
-        /// <summary>
-        /// Loads a two-dimensional bitmap texture.
-        /// </summary>
-        /// <returns>The 2D texture.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <summary>Loads a <see cref="Texture2D"/> from the specified content path.</summary>
+        /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="Texture2D"/>.</returns>
         Texture2D LoadTexture2D(string contentPath);
 
         /// <summary>
-        /// Tries to load a two-dimensional bitmap texture.
+        /// Attempts to load a <see cref="Texture2D"/> from the specified content path.
+        /// Returns <c>null</c> instead of throwing if the asset cannot be loaded.
         /// </summary>
-        /// <returns>The 2D texture if it can be loaded, null otherwise.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="Texture2D"/>, or <c>null</c> if loading fails.</returns>
         Texture2D TryLoadTexture2D(string contentPath);
     }
 }

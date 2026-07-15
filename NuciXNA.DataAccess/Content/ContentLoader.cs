@@ -1,78 +1,42 @@
+using System;
+
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace NuciXNA.DataAccess.Content
 {
     /// <summary>
-    /// Resource Manager that can load resources from plain disk files.
+    /// Base class for content loaders. Provides safe try-load wrappers around
+    /// the abstract load methods that concrete implementations must supply.
     /// </summary>
     public abstract class ContentLoader : IContentLoader
     {
-        /// <summary>
-        /// Loads a sound effect.
-        /// </summary>
-        /// <returns>The sound effect.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public abstract SoundEffect LoadSoundEffect(string resourcePath);
+        /// <inheritdoc/>
+        public abstract SoundEffect LoadSoundEffect(string contentPath);
 
-        /// <summary>
-        /// Tries to load a sound effect.
-        /// </summary>
-        /// <returns>The sound effect if it can be loaded, null otherwise.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public SoundEffect TryLoadSoundEffect(string resourcePath)
+        /// <inheritdoc/>
+        public SoundEffect TryLoadSoundEffect(string contentPath)
+            => TryLoad(() => LoadSoundEffect(contentPath));
+
+        /// <inheritdoc/>
+        public abstract SpriteFont LoadSpriteFont(string contentPath);
+
+        /// <inheritdoc/>
+        public SpriteFont TryLoadSpriteFont(string contentPath)
+            => TryLoad(() => LoadSpriteFont(contentPath));
+
+        /// <inheritdoc/>
+        public abstract Texture2D LoadTexture2D(string contentPath);
+
+        /// <inheritdoc/>
+        public Texture2D TryLoadTexture2D(string contentPath)
+            => TryLoad(() => LoadTexture2D(contentPath));
+
+        private static T TryLoad<T>(Func<T> load) where T : class
         {
             try
             {
-                return LoadSoundEffect(resourcePath);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Loads a sprite font.
-        /// </summary>
-        /// <returns>The sprite font.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public abstract SpriteFont LoadSpriteFont(string resourcePath);
-
-        /// <summary>
-        /// Tries to load a sprite font.
-        /// </summary>
-        /// <returns>The sprite font if it can be loaded, null otherwise.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public SpriteFont TryLoadSpriteFont(string resourcePath)
-        {
-            try
-            {
-                return LoadSpriteFont(resourcePath);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Loads a two-dimensional bitmap texture.
-        /// </summary>
-        /// <returns>The 2D texture.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public abstract Texture2D LoadTexture2D(string resourcePath);
-
-        /// <summary>
-        /// Tries to load a two-dimensional bitmap texture.
-        /// </summary>
-        /// <returns>The 2D texture if it can be loaded, null otherwise.</returns>
-        /// <param name="resourcePath">The path to the file (without extension).</param>
-        public Texture2D TryLoadTexture2D(string resourcePath)
-        {
-            try
-            {
-                return LoadTexture2D(resourcePath);
+                return load();
             }
             catch
             {

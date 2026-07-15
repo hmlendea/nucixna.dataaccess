@@ -2,7 +2,9 @@ using System;
 
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+
 using Moq;
+
 using NUnit.Framework;
 
 using NuciXNA.DataAccess.Content;
@@ -255,7 +257,9 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             Texture2D result = NuciContentManager.Instance.LoadTexture2D("testTexture");
 
-            Assert.That(result, Is.Null);
+            Assert.That(
+                result,
+                Is.Null);
         }
 
         [Test]
@@ -503,7 +507,9 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             Texture2D result = NuciContentManager.Instance.LoadTexture2D("testTexture");
 
-            Assert.That(result, Is.Null);
+            Assert.That(
+                result,
+                Is.Null);
         }
 
         [TestCase("testTexture")]

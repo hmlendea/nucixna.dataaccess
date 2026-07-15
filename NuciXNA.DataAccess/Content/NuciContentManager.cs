@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,22 +7,23 @@ using Microsoft.Xna.Framework.Graphics;
 namespace NuciXNA.DataAccess.Content
 {
     /// <summary>
-    /// A <see cref="ContentManager"> alternative that can load content either from the Content Pipeline or from plain disk files.
+    /// Thread-safe singleton manager that coordinates content loading across a pipeline
+    /// loader and a plain-file fallback loader.
     /// </summary>
-    public class NuciContentManager
+    public sealed class NuciContentManager
     {
-        static volatile NuciContentManager instance;
-        static readonly Lock syncRoot = new();
+        private static readonly Lock syncRoot = new();
+        private static volatile NuciContentManager instance;
 
-        /// <summary>
-        /// Gets the instance.
-        /// </summary>
-        /// <value>The instance.</value>
+        private IContentLoader pipelineContentLoader;
+        private IContentLoader plainFileContentLoader;
+
+        /// <summary>Gets the singleton instance of <see cref="NuciContentManager"/>.</summary>
         public static NuciContentManager Instance
         {
             get
             {
-                if (instance == null)
+                if (instance is null)
                 {
                     lock (syncRoot)
                     {
@@ -34,21 +36,22 @@ namespace NuciXNA.DataAccess.Content
         }
 
         /// <summary>
-        /// Gets or sets placeholder used when a texture is missing.
-        /// If a value is set, this texture will be displayed when the desired one is missing, instead of throwing an exception.
+        /// Gets or sets the content path of the texture to use as a placeholder when a
+        /// requested texture cannot be found. Set to <c>null</c> or an empty string to
+        /// disable placeholder substitution.
         /// </summary>
-        /// <value>The path to the content file.</value>
         public static string MissingTexturePlaceholder { get; set; }
 
-        private IContentLoader pipelineContentLoader;
-
-        private IContentLoader plainFileContentLoader;
+        private NuciContentManager()
+        {
+        }
 
         /// <summary>
-        /// Loads the content.
+        /// Initialises the manager with the provided content loader instances.
+        /// Use this overload in unit tests or when supplying custom loader implementations.
         /// </summary>
-        /// <param name="pipelineContentLoader">The XNA Pipeline content loader.</param>
-        /// <param name="plainFileContentLoader">The plain disk files content loader.</param>
+        /// <param name="pipelineContentLoader">The primary pipeline-based content loader.</param>
+        /// <param name="plainFileContentLoader">The fallback plain-file content loader.</param>
         public void LoadContent(IContentLoader pipelineContentLoader, IContentLoader plainFileContentLoader)
         {
             this.pipelineContentLoader = pipelineContentLoader;
@@ -56,10 +59,12 @@ namespace NuciXNA.DataAccess.Content
         }
 
         /// <summary>
-        /// Loads the content.
+        /// Initialises the manager using the standard MonoGame <see cref="ContentManager"/> and
+        /// <see cref="GraphicsDevice"/>. This creates a <see cref="PipelineContentLoader"/> and
+        /// a <see cref="PlainFileContentLoader"/> internally.
         /// </summary>
-        /// <param name="content">Content manager.</param>
-        /// <param name="graphicsDevice">Graphics device.</param>
+        /// <param name="content">The MonoGame content manager used for pipeline-compiled assets.</param>
+        /// <param name="graphicsDevice">The graphics device used for loading raw texture files.</param>
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
             pipelineContentLoader = new PipelineContentLoader(content);
@@ -67,32 +72,36 @@ namespace NuciXNA.DataAccess.Content
         }
 
         /// <summary>
-        /// Loads a sound effect either from the Content Pipeline or from plain files (WAVs only).
+        /// Loads a <see cref="SoundEffect"/>. Attempts the pipeline loader first; falls back
+        /// to the plain-file loader if the pipeline loader returns <c>null</c>.
         /// </summary>
-        /// <returns>The sound effect.</returns>
-        /// <param name="contentFile">The path to the content (without extension).</param>
-        public SoundEffect LoadSoundEffect(string contentFile)
+        /// <param name="contentPath">The path to the sound effect asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SoundEffect"/>.</returns>
+        public SoundEffect LoadSoundEffect(string contentPath)
         {
-            SoundEffect soundEffect = pipelineContentLoader.TryLoadSoundEffect(contentFile);
+            SoundEffect soundEffect = pipelineContentLoader.TryLoadSoundEffect(contentPath);
 
-            soundEffect ??= plainFileContentLoader.LoadSoundEffect(contentFile);
+            soundEffect ??= plainFileContentLoader.LoadSoundEffect(contentPath);
 
             return soundEffect;
         }
 
         /// <summary>
-        /// Loads a sprite font from the Content Pipeline.
+        /// Loads a <see cref="SpriteFont"/> exclusively from the pipeline loader.
         /// </summary>
-        /// <returns>The sprite font.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="SpriteFont"/>.</returns>
         public SpriteFont LoadSpriteFont(string contentPath)
             => pipelineContentLoader.LoadSpriteFont(contentPath);
 
         /// <summary>
-        /// Loads a 2D texture either from the Content Pipeline or from disk (PNGs only).
+        /// Loads a <see cref="Texture2D"/>. Attempts the pipeline loader first; falls back to
+        /// the plain-file loader if the pipeline loader returns <c>null</c>. When
+        /// <see cref="MissingTexturePlaceholder"/> is set and neither loader finds the asset, the
+        /// placeholder texture is loaded from the pipeline instead.
         /// </summary>
-        /// <returns>The 2D texture.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
+        /// <returns>The loaded <see cref="Texture2D"/>, or <c>null</c> if no asset could be found.</returns>
         public Texture2D LoadTexture2D(string contentPath)
         {
             Texture2D texture2d = pipelineContentLoader.TryLoadTexture2D(contentPath);

@@ -1,6 +1,7 @@
+using NUnit.Framework;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using NUnit.Framework;
 
 using NuciXNA.DataAccess.IO;
 using NuciXNA.Primitives;
@@ -54,7 +55,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(width, height);
 
-            Assert.That(subject.Size.Width, Is.EqualTo(width));
+            Assert.That(
+                subject.Size.Width,
+                Is.EqualTo(width));
         }
 
         [TestCase(4, 8)]
@@ -71,7 +74,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(width, height);
 
-            Assert.That(subject.Size.Height, Is.EqualTo(height));
+            Assert.That(
+                subject.Size.Height,
+                Is.EqualTo(height));
         }
 
         // Constructor — Size2D
@@ -86,7 +91,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(new Size2D(width, height));
 
-            Assert.That(subject.Size.Width, Is.EqualTo(width));
+            Assert.That(
+                subject.Size.Width,
+                Is.EqualTo(width));
         }
 
         [TestCase(4, 8)]
@@ -99,7 +106,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(new Size2D(width, height));
 
-            Assert.That(subject.Size.Height, Is.EqualTo(height));
+            Assert.That(
+                subject.Size.Height,
+                Is.EqualTo(height));
         }
 
         [TestCase(4, 8)]
@@ -113,7 +122,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(size);
 
-            Assert.That(subject.Size.Width, Is.EqualTo(size.Width));
+            Assert.That(
+                subject.Size.Width,
+                Is.EqualTo(size.Width));
         }
 
         [TestCase(4, 8)]
@@ -127,7 +138,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(size);
 
-            Assert.That(subject.Size.Height, Is.EqualTo(size.Height));
+            Assert.That(
+                subject.Size.Height,
+                Is.EqualTo(size.Height));
         }
 
         // Constructor — Image<Rgba32>
@@ -144,7 +157,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(image);
 
-            Assert.That(subject.Size.Width, Is.EqualTo(width));
+            Assert.That(
+                subject.Size.Width,
+                Is.EqualTo(width));
         }
 
         [TestCase(4, 8)]
@@ -159,7 +174,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.Dispose();
             subject = new Bitmap(image);
 
-            Assert.That(subject.Size.Height, Is.EqualTo(height));
+            Assert.That(
+                subject.Size.Height,
+                Is.EqualTo(height));
         }
 
         // GetPixel — default value on new bitmap
@@ -189,7 +206,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueRed);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(OpaqueRed));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(OpaqueRed));
         }
 
         [Test]
@@ -197,7 +216,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueGreen);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(OpaqueGreen));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(OpaqueGreen));
         }
 
         [Test]
@@ -205,7 +226,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueBlue);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(OpaqueBlue));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(OpaqueBlue));
         }
 
         [Test]
@@ -213,7 +236,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueWhite);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(OpaqueWhite));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(OpaqueWhite));
         }
 
         [Test]
@@ -221,7 +246,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, SemiTransparentPurple);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(SemiTransparentPurple));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(SemiTransparentPurple));
         }
 
         [TestCase(0, 0)]
@@ -234,7 +261,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(x, y, OpaqueRed);
 
-            Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueRed));
+            Assert.That(
+                subject.GetPixel(x, y),
+                Is.EqualTo(OpaqueRed));
         }
 
         [TestCase(0, 0)]
@@ -245,7 +274,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.SetPixel(x, y, OpaqueRed);
             subject.SetPixel(x, y, OpaqueBlue);
 
-            Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueBlue));
+            Assert.That(
+                subject.GetPixel(x, y),
+                Is.EqualTo(OpaqueBlue));
         }
 
         [Test]
@@ -255,9 +286,17 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.SetPixel(4, 4, OpaqueGreen);
             subject.SetPixel(7, 7, OpaqueBlue);
 
-            Assert.That(subject.GetPixel(0, 0), Is.EqualTo(OpaqueRed));
-            Assert.That(subject.GetPixel(4, 4), Is.EqualTo(OpaqueGreen));
-            Assert.That(subject.GetPixel(7, 7), Is.EqualTo(OpaqueBlue));
+            Assert.That(
+                subject.GetPixel(0, 0),
+                Is.EqualTo(OpaqueRed));
+
+            Assert.That(
+                subject.GetPixel(4, 4),
+                Is.EqualTo(OpaqueGreen));
+
+            Assert.That(
+                subject.GetPixel(7, 7),
+                Is.EqualTo(OpaqueBlue));
         }
 
         [Test]
@@ -265,7 +304,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueRed);
 
-            Assert.That(subject.GetPixel(7, 7), Is.EqualTo(TransparentBlack));
+            Assert.That(
+                subject.GetPixel(7, 7),
+                Is.EqualTo(TransparentBlack));
         }
 
         // SetPixel / GetPixel — round trips with Point2D
@@ -278,7 +319,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(new Point2D(x, y), OpaqueYellow);
 
-            Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueYellow));
+            Assert.That(
+                subject.GetPixel(x, y),
+                Is.EqualTo(OpaqueYellow));
         }
 
         [TestCase(0, 0)]
@@ -289,7 +332,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(x, y, OpaqueYellow);
 
-            Assert.That(subject.GetPixel(new Point2D(x, y)), Is.EqualTo(OpaqueYellow));
+            Assert.That(
+                subject.GetPixel(new Point2D(x, y)),
+                Is.EqualTo(OpaqueYellow));
         }
 
         [TestCase(0, 0)]
@@ -301,7 +346,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
             subject.SetPixel(point, OpaqueGreen);
 
-            Assert.That(subject.GetPixel(point), Is.EqualTo(OpaqueGreen));
+            Assert.That(
+                subject.GetPixel(point),
+                Is.EqualTo(OpaqueGreen));
         }
 
         // GetPixel — Point2D is consistent with int, int
@@ -329,7 +376,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject[x, y] = OpaqueBlue;
 
-            Assert.That(subject[x, y], Is.EqualTo(OpaqueBlue));
+            Assert.That(
+                subject[x, y],
+                Is.EqualTo(OpaqueBlue));
         }
 
         [TestCase(0, 0)]
@@ -339,7 +388,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject[x, y] = OpaqueRed;
 
-            Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueRed));
+            Assert.That(
+                subject.GetPixel(x, y),
+                Is.EqualTo(OpaqueRed));
         }
 
         [TestCase(0, 0)]
@@ -349,7 +400,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(x, y, OpaqueGreen);
 
-            Assert.That(subject[x, y], Is.EqualTo(OpaqueGreen));
+            Assert.That(
+                subject[x, y],
+                Is.EqualTo(OpaqueGreen));
         }
 
         // Indexer — Point2D
@@ -364,7 +417,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
             subject[point] = OpaqueWhite;
 
-            Assert.That(subject[point], Is.EqualTo(OpaqueWhite));
+            Assert.That(
+                subject[point],
+                Is.EqualTo(OpaqueWhite));
         }
 
         [TestCase(0, 0)]
@@ -374,7 +429,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject[new Point2D(x, y)] = OpaqueRed;
 
-            Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueRed));
+            Assert.That(
+                subject.GetPixel(x, y),
+                Is.EqualTo(OpaqueRed));
         }
 
         [TestCase(0, 0)]
@@ -384,7 +441,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject[x, y] = OpaqueBlue;
 
-            Assert.That(subject[new Point2D(x, y)], Is.EqualTo(OpaqueBlue));
+            Assert.That(
+                subject[new Point2D(x, y)],
+                Is.EqualTo(OpaqueBlue));
         }
 
         // Indexer — Point2D and int, int are consistent
@@ -396,7 +455,9 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(x, y, OpaqueRed);
 
-            Assert.That(subject[x, y], Is.EqualTo(subject[new Point2D(x, y)]));
+            Assert.That(
+                subject[x, y],
+                Is.EqualTo(subject[new Point2D(x, y)]));
         }
 
         // Dispose
