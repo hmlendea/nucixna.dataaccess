@@ -3,6 +3,7 @@ using System.IO;
 
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+
 using NUnit.Framework;
 
 using NuciXNA.DataAccess.Content;
@@ -12,22 +13,29 @@ namespace NuciXNA.DataAccess.UnitTests.Content
     [TestFixture]
     public sealed class ContentLoaderTests
     {
-        private sealed class ThrowingContentLoader(Exception exceptionToThrow) : ContentLoader
+        private sealed class ThrowingContentLoader : ContentLoader
         {
-            public override SoundEffect LoadSoundEffect(string resourcePath) => throw exceptionToThrow;
+            private readonly Exception exceptionToThrow;
 
-            public override SpriteFont LoadSpriteFont(string resourcePath) => throw exceptionToThrow;
+            public ThrowingContentLoader(Exception exceptionToThrow)
+            {
+                this.exceptionToThrow = exceptionToThrow;
+            }
 
-            public override Texture2D LoadTexture2D(string resourcePath) => throw exceptionToThrow;
+            public override SoundEffect LoadSoundEffect(string contentPath) => throw exceptionToThrow;
+
+            public override SpriteFont LoadSpriteFont(string contentPath) => throw exceptionToThrow;
+
+            public override Texture2D LoadTexture2D(string contentPath) => throw exceptionToThrow;
         }
 
         private sealed class NullReturningContentLoader : ContentLoader
         {
-            public override SoundEffect LoadSoundEffect(string resourcePath) => null;
+            public override SoundEffect LoadSoundEffect(string contentPath) => null;
 
-            public override SpriteFont LoadSpriteFont(string resourcePath) => null;
+            public override SpriteFont LoadSpriteFont(string contentPath) => null;
 
-            public override Texture2D LoadTexture2D(string resourcePath) => null;
+            public override Texture2D LoadTexture2D(string contentPath) => null;
         }
 
         private sealed class SpyContentLoader : ContentLoader
@@ -38,23 +46,23 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             public string LastTexture2DPath { get; private set; }
 
-            public override SoundEffect LoadSoundEffect(string resourcePath)
+            public override SoundEffect LoadSoundEffect(string contentPath)
             {
-                LastSoundEffectPath = resourcePath;
+                LastSoundEffectPath = contentPath;
 
                 return null;
             }
 
-            public override SpriteFont LoadSpriteFont(string resourcePath)
+            public override SpriteFont LoadSpriteFont(string contentPath)
             {
-                LastSpriteFontPath = resourcePath;
+                LastSpriteFontPath = contentPath;
 
                 return null;
             }
 
-            public override Texture2D LoadTexture2D(string resourcePath)
+            public override Texture2D LoadTexture2D(string contentPath)
             {
-                LastTexture2DPath = resourcePath;
+                LastTexture2DPath = contentPath;
 
                 return null;
             }
@@ -167,7 +175,9 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             spyLoader.TryLoadSoundEffect(path);
 
-            Assert.That(spyLoader.LastSoundEffectPath, Is.EqualTo(path));
+            Assert.That(
+                spyLoader.LastSoundEffectPath,
+                Is.EqualTo(path));
         }
 
         // TryLoadSpriteFont — IOException
@@ -257,7 +267,9 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             spyLoader.TryLoadSpriteFont(path);
 
-            Assert.That(spyLoader.LastSpriteFontPath, Is.EqualTo(path));
+            Assert.That(
+                spyLoader.LastSpriteFontPath,
+                Is.EqualTo(path));
         }
 
         // TryLoadTexture2D — IOException
@@ -347,7 +359,9 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             spyLoader.TryLoadTexture2D(path);
 
-            Assert.That(spyLoader.LastTexture2DPath, Is.EqualTo(path));
+            Assert.That(
+                spyLoader.LastTexture2DPath,
+                Is.EqualTo(path));
         }
     }
 }

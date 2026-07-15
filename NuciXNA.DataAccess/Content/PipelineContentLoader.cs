@@ -5,34 +5,29 @@ using Microsoft.Xna.Framework.Graphics;
 namespace NuciXNA.DataAccess.Content
 {
     /// <summary>
-    /// An <see cref="IContentLoader"> that can load resources from the XNA Content Pipeline.
+    /// Loads content assets using the MonoGame pipeline <see cref="ContentManager"/>.
+    /// Suitable for compiled <c>.xnb</c> assets.
     /// </summary>
-    /// <param name="content">The XNA content manager.</param>
-    public class PipelineContentLoader(ContentManager content) : ContentLoader, IContentLoader
+    public sealed class PipelineContentLoader : ContentLoader
     {
-        readonly ContentManager content = content;
+        private readonly ContentManager content;
 
-        /// <summary>
-        /// Loads a sound effect from the Content Pipeline.
-        /// </summary>
-        /// <returns>The sound effect.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <summary>Initialises a new instance of <see cref="PipelineContentLoader"/>.</summary>
+        /// <param name="content">The MonoGame content manager used to load compiled pipeline assets.</param>
+        public PipelineContentLoader(ContentManager content)
+        {
+            this.content = content;
+        }
+
+        /// <inheritdoc/>
         public override SoundEffect LoadSoundEffect(string contentPath)
             => content.Load<SoundEffect>(contentPath);
 
-        /// <summary>
-        /// Loads a sprite font from the Content Pipeline.
-        /// </summary>
-        /// <returns>The sprite font.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <inheritdoc/>
         public override SpriteFont LoadSpriteFont(string contentPath)
             => content.Load<SpriteFont>(contentPath);
 
-        /// <summary>
-        /// Loads a 2D texture either from the Content Pipeline.
-        /// </summary>
-        /// <returns>The 2D texture.</returns>
-        /// <param name="contentPath">The path to the content (without extension).</param>
+        /// <inheritdoc/>
         public override Texture2D LoadTexture2D(string contentPath)
             => content.Load<Texture2D>(contentPath);
     }
