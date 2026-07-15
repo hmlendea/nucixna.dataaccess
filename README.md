@@ -1,39 +1,65 @@
-[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/fund.html) [![Latest Release](https://img.shields.io/github/v/release/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/releases/latest) [![Build Status](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml)
+[![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
+[![Latest Release](https://img.shields.io/github/v/release/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/releases/latest)
+[![Build Status](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://gnu.org/licenses/gpl-3.0)
 
 # NuciXNA.DataAccess
 
 Data access utilities for the NuciXNA ecosystem, built on top of MonoGame/XNA.
 
-This package provides:
+## ✨ Features
 
-- Flexible content loading through pipeline assets and plain files
-- A singleton content manager that can fallback between loaders
-- A lightweight bitmap utility powered by ImageSharp
+- **Content loading** - loads `SoundEffect`, `SpriteFont`, and `Texture2D` assets via the MonoGame content pipeline with automatic plain-file fallback
+- **Missing-texture placeholder** - configurable fallback texture returned when an asset cannot be located by either loader
+- **Custom loader injection** - accepts any `IContentLoader` implementation, enabling easy testing and custom asset sources
+- **Bitmap utility** - pixel-level image manipulation powered by ImageSharp, integrated with `NuciXNA.Primitives` types (`Colour`, `Point2D`, `Size2D`)
 
-## Features
+## 🚀 Usage
 
-### Content loading
+### Initialise content loading
 
-`NuciContentManager` can load:
+```csharp
+using NuciXNA.DataAccess.Content;
 
-- `SoundEffect` from Content Pipeline first, then fallback to disk (`.wav`)
-- `SpriteFont` from Content Pipeline
-- `Texture2D` from Content Pipeline first, then fallback to disk (`.png`)
+// Call once during game initialisation (e.g. in LoadContent)
+NuciContentManager.Instance.LoadContent(Content, GraphicsDevice);
 
-It supports a configurable missing-texture placeholder:
+Texture2D playerTexture = NuciContentManager.Instance.LoadTexture2D("Textures/player");
+SoundEffect clickSound = NuciContentManager.Instance.LoadSoundEffect("Audio/click");
+SpriteFont uiFont = NuciContentManager.Instance.LoadSpriteFont("Fonts/UiFont");
+```
 
-- Set `NuciContentManager.MissingTexturePlaceholder` to a pipeline texture path
-- If a texture cannot be found, the placeholder texture is returned instead
+### Configure a missing-texture placeholder
 
-### Bitmap helper
+```csharp
+using NuciXNA.DataAccess.Content;
 
-`NuciXNA.DataAccess.IO.Bitmap` wraps ImageSharp for pixel-level manipulation:
+NuciContentManager.MissingTexturePlaceholder = "Textures/missing";
 
-- Load and save images
-- Get and set pixels using coordinates or points
-- Work with `NuciXNA.Primitives` types (`Colour`, `Point2D`, `Size2D`)
+// Returns the placeholder texture if "Textures/unknown" cannot be found
+Texture2D texture = NuciContentManager.Instance.LoadTexture2D("Textures/unknown");
+```
 
-## Installation
+### Use the bitmap utility
+
+```csharp
+using NuciXNA.DataAccess.IO;
+using NuciXNA.Primitives;
+
+using Bitmap image = Bitmap.Load("input.png");
+
+Colour pixel = image[10, 20];
+image[10, 20] = Colour.FromArgb(255, 255, 0, 0);
+
+image.Save("output.png");
+```
+
+## ⚠️ Known Limitations
+
+- `PlainFileContentLoader` supports `.wav` for `SoundEffect` and `.png` for `Texture2D` only; other formats require a custom `IContentLoader` implementation.
+- `SpriteFont` loading is pipeline-only; `PlainFileContentLoader.LoadSpriteFont` throws `NotImplementedException`.
+
+## 📦 Installation
 
 [![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciXNA.DataAccess)
 
@@ -49,47 +75,13 @@ dotnet add package NuciXNA.DataAccess
 Install-Package NuciXNA.DataAccess
 ```
 
-## Target Framework
+## 🛠️ Development
 
-The project currently targets `net10.0`, and MonoGame.
+### Requirements
 
-## Quick Start
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
 
-### Initialize content loading
-
-```csharp
-using NuciXNA.DataAccess.Content;
-
-// Usually called during game initialization
-NuciContentManager.Instance.LoadContent(contentManager, graphicsDevice);
-
-var texture = NuciContentManager.Instance.LoadTexture2D("Content/Textures/player");
-var clickSfx = NuciContentManager.Instance.LoadSoundEffect("Content/Audio/click");
-var uiFont = NuciContentManager.Instance.LoadSpriteFont("Fonts/UiFont");
-```
-
-### Configure missing-texture placeholder
-
-```csharp
-using NuciXNA.DataAccess.Content;
-
-NuciContentManager.MissingTexturePlaceholder = "Textures/missing";
-var texture = NuciContentManager.Instance.LoadTexture2D("Textures/unknown");
-```
-
-### Use the bitmap utility
-
-```csharp
-using NuciXNA.DataAccess.IO;
-using NuciXNA.Primitives;
-
-using Bitmap image = Bitmap.Load("input.png");
-Colour pixel = image[10, 20];
-image[10, 20] = Colour.FromArgb(255, 255, 0, 0);
-image.Save("output.png");
-```
-
-## Development
+All NuGet dependencies are restored automatically by `dotnet restore`.
 
 ### Build
 
@@ -103,22 +95,27 @@ dotnet build NuciXNA.DataAccess.sln
 dotnet test NuciXNA.DataAccess.sln
 ```
 
-## Notes
+### Release
 
-- `PlainFileContentLoader` currently supports:
-	- `.wav` for `SoundEffect`
-	- `.png` for `Texture2D`
-- `SpriteFont` loading is pipeline-based.
+```bash
+dotnet pack NuciXNA.DataAccess -c Release
+```
 
-## Related Projects
+### Dependencies
 
-- [NuciXNA.DataAccess](https://github.com/hmlendea/nucixna.dataaccess)
+| Package | Purpose |
+|---------|---------|
+| `MonoGame.Framework.DesktopGL` | XNA/MonoGame types (`Texture2D`, `SoundEffect`, `SpriteFont`, `GraphicsDevice`) |
+| `NuciXNA.Primitives` | `Colour`, `Point2D`, `Size2D` used by the bitmap utility |
+| `SixLabors.ImageSharp` | Pixel-level image decoding and encoding for `Bitmap` |
+
+## 🔗 Related Projects
+
 - [NuciXNA.Graphics](https://github.com/hmlendea/nucixna.graphics)
 - [NuciXNA.GUI](https://github.com/hmlendea/nucixna.gui)
 - [NuciXNA.Input](https://github.com/hmlendea/nucixna.input)
-- [NuciXNA.Primitives](https://github.com/hmlendea/nucixna.Primitives)
+- [NuciXNA.Primitives](https://github.com/hmlendea/nucixna.primitives)
 
-## License
+## 📜 License
 
-Licensed under the GNU General Public License v3.0 or later.
-See [LICENSE](./LICENSE) for details.
+Licensed under the [GNU General Public License v3.0](./LICENSE) or later.
