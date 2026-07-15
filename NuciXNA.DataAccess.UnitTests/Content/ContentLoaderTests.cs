@@ -12,15 +12,8 @@ namespace NuciXNA.DataAccess.UnitTests.Content
     [TestFixture]
     public sealed class ContentLoaderTests
     {
-        private sealed class ThrowingContentLoader : ContentLoader
+        private sealed class ThrowingContentLoader(Exception exceptionToThrow) : ContentLoader
         {
-            private readonly Exception exceptionToThrow;
-
-            public ThrowingContentLoader(Exception exceptionToThrow)
-            {
-                this.exceptionToThrow = exceptionToThrow;
-            }
-
             public override SoundEffect LoadSoundEffect(string resourcePath) => throw exceptionToThrow;
 
             public override SpriteFont LoadSpriteFont(string resourcePath) => throw exceptionToThrow;
