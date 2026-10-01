@@ -10,7 +10,7 @@ Data access utilities for the NuciXNA ecosystem, built on top of MonoGame/XNA.
 ## ✨ Features
 
 - **Content loading** - loads `SoundEffect`, `SpriteFont`, and `Texture2D` assets via the MonoGame content pipeline with automatic plain-file fallback
-- **Missing-texture placeholder** - configurable fallback texture returned when an asset cannot be located by either loader
+- **Missing-texture placeholder** - configurable pipeline fallback attempted when an asset cannot be located by either loader
 - **Custom loader injection** - accepts any `IContentLoader` implementation, enabling easy testing and custom asset sources
 - **Bitmap utility** - pixel-level image manipulation powered by ImageSharp, integrated with `NuciXNA.Primitives` types (`Colour`, `Point2D`, `Size2D`)
 
@@ -123,6 +123,10 @@ The key directories inside `NuciXNA.DataAccess/` are:
 | `Content/` | Content loading infrastructure (`IContentLoader`, `ContentLoader`, `NuciContentManager`, `PipelineContentLoader`, `PlainFileContentLoader`) |
 | `IO/` | File I/O utilities (`Bitmap`) |
 
+## 🏗️ Architecture
+
+See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
+
 ## 🤝 Contributing
 
 Contributions are welcome. Please:
@@ -150,4 +154,3 @@ If you find this project useful, consider [funding it](https://hmlendea.go.ro/fu
 
 Licensed under the `GNU General Public License v3.0` or later.
 See [LICENSE](./LICENSE) for details.
-
