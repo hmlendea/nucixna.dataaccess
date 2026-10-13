@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NuciXNA.DataAccess/NuciXNA.DataAccess.csproj" />
+  <Project Path="NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj" />
+</Solution>
