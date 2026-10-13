@@ -528,5 +528,220 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             plainFileContentLoaderMock.Verify(loader => loader.TryLoadTexture2D(path), Times.Once);
         }
+
+        // LoadSoundEffect — additional edge cases
+
+        [Test]
+        public void GivenPipelineTryLoadThrows_WhenLoadSoundEffectIsCalled_ThenExceptionIsThrown()
+        {
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
+                .Throws<InvalidOperationException>();
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadSoundEffect("testSoundEffect"),
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        // LoadSpriteFont — additional edge cases
+
+        [Test]
+        public void GivenPipelineLoadThrows_WhenLoadSpriteFontIsCalled_ThenExceptionIsThrown()
+        {
+            pipelineContentLoaderMock
+                .Setup(loader => loader.LoadSpriteFont(It.IsAny<string>()))
+                .Throws<InvalidOperationException>();
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadSpriteFont("testSpriteFont"),
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        // LoadTexture2D — additional edge cases with MissingTexturePlaceholder
+
+        [Test]
+        public void GivenMissingTexturePlaceholderIsSet_AndPipelineTryLoadThrows_WhenLoadTexture2DIsCalled_ThenExceptionIsThrown()
+        {
+            NuciContentManager.MissingTexturePlaceholder = "missing_texture";
+
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Throws<InvalidOperationException>();
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadTexture2D("testTexture"),
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void GivenMissingTexturePlaceholderIsSet_AndPipelineTryLoadReturnsNull_AndPlainFileTryLoadThrows_WhenLoadTexture2DIsCalled_ThenExceptionIsThrown()
+        {
+            NuciContentManager.MissingTexturePlaceholder = "missing_texture";
+
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Throws<InvalidOperationException>();
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadTexture2D("testTexture"),
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        // LoadTexture2D — MissingTexturePlaceholder state management
+
+        [Test]
+        public void GivenMissingTexturePlaceholderChanged_WhenLoadTexture2DIsCalled_ThenNewPlaceholderIsUsed()
+        {
+            NuciContentManager.MissingTexturePlaceholder = "first_placeholder";
+
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            NuciContentManager.Instance.LoadTexture2D("testTexture");
+
+            pipelineContentLoaderMock.Verify(loader => loader.LoadTexture2D("first_placeholder"), Times.Once);
+
+            pipelineContentLoaderMock.Reset();
+            plainFileContentLoaderMock.Reset();
+
+            NuciContentManager.MissingTexturePlaceholder = "second_placeholder";
+
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            NuciContentManager.Instance.LoadTexture2D("testTexture");
+
+            pipelineContentLoaderMock.Verify(loader => loader.LoadTexture2D("second_placeholder"), Times.Once);
+        }
+
+        [Test]
+        public void GivenMissingTexturePlaceholderSetToNonNull_WhenLoadTexture2DIsCalled_ThenPlainFileTryLoadIsCalled()
+        {
+            NuciContentManager.MissingTexturePlaceholder = "missing_texture";
+
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()));
+
+            NuciContentManager.Instance.LoadTexture2D("testTexture");
+
+            plainFileContentLoaderMock.Verify(loader => loader.TryLoadTexture2D("testTexture"), Times.Once);
+        }
+
+        // LoadTexture2D — path edge cases
+
+        [TestCase(".")]
+        [TestCase("..")]
+        [TestCase("./relative")]
+        [TestCase("../parent")]
+        [TestCase("path/with spaces/file")]
+        [TestCase("path/with-unicode/文件")]
+        [TestCase("path/with/special/chars_!@#$%^&*()")]
+        [TestCase("very/long/path/that/goes/deep/into/the/directory/structure/with/many/segments")]
+        public void GivenEdgeCasePath_WhenLoadTexture2DIsCalled_ThenPipelineTryLoadIsCalledWithCorrectPath(string path)
+        {
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
+
+            NuciContentManager.Instance.LoadTexture2D(path);
+
+            pipelineContentLoaderMock.Verify(loader => loader.TryLoadTexture2D(path), Times.Once);
+        }
+
+        [TestCase(".")]
+        [TestCase("..")]
+        [TestCase("./relative")]
+        [TestCase("../parent")]
+        [TestCase("path/with spaces/file")]
+        [TestCase("path/with-unicode/文件")]
+        [TestCase("path/with/special/chars_!@#$%^&*()")]
+        [TestCase("very/long/path/that/goes/deep/into/the/directory/structure/with/many/segments")]
+        public void GivenEdgeCasePath_WhenLoadTexture2DIsCalled_ThenPlainFileLoadIsCalledWithCorrectPath(string path)
+        {
+            pipelineContentLoaderMock
+                .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
+                .Returns((Texture2D)null);
+
+            plainFileContentLoaderMock
+                .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
+
+            NuciContentManager.Instance.LoadTexture2D(path);
+
+            plainFileContentLoaderMock.Verify(loader => loader.LoadTexture2D(path), Times.Once);
+        }
+
+        // LoadContent — reinitialization (tested implicitly by other tests)
+
+        // LoadContent — null validation (implementation does not validate; NullReferenceException occurs on use)
+
+        [Test]
+        public void GivenNullPipelineLoader_WhenLoadContentIsCalled_ThenNullReferenceExceptionOnUse()
+        {
+            NuciContentManager.Instance.LoadContent(null, plainFileContentLoaderMock.Object);
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadSoundEffect("test"),
+                Throws.TypeOf<NullReferenceException>());
+        }
+
+        [Test]
+        public void GivenNullPlainFileLoader_WhenLoadContentIsCalled_ThenNullReferenceExceptionOnUse()
+        {
+            NuciContentManager.Instance.LoadContent(pipelineContentLoaderMock.Object, null);
+
+            Assert.That(
+                () => NuciContentManager.Instance.LoadSoundEffect("test"),
+                Throws.TypeOf<NullReferenceException>());
+        }
+
+        // Instance — singleton behavior
+
+        [Test]
+        public void GivenInstanceAccessedMultipleTimes_SameInstanceIsReturned()
+        {
+            NuciContentManager instance1 = NuciContentManager.Instance;
+            NuciContentManager instance2 = NuciContentManager.Instance;
+
+            Assert.That(instance1, Is.SameAs(instance2));
+        }
+
+        // MissingTexturePlaceholder — property behavior
+
+        [Test]
+        public void GivenMissingTexturePlaceholderSet_WhenGetIsCalled_ThenValueIsReturned()
+        {
+            NuciContentManager.MissingTexturePlaceholder = "test_placeholder";
+
+            Assert.That(NuciContentManager.MissingTexturePlaceholder, Is.EqualTo("test_placeholder"));
+        }
+
+        [Test]
+        public void GivenMissingTexturePlaceholderNotSet_WhenGetIsCalled_ThenNullIsReturned()
+        {
+            NuciContentManager.MissingTexturePlaceholder = null;
+
+            Assert.That(NuciContentManager.MissingTexturePlaceholder, Is.Null);
+        }
     }
 }

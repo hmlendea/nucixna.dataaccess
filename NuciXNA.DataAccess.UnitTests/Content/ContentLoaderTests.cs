@@ -363,5 +363,182 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 spyLoader.LastTexture2DPath,
                 Is.EqualTo(path));
         }
+
+        // TryLoad* — additional exception types
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsUnauthorizedAccessException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
+        {
+            ThrowingContentLoader loader = new(new UnauthorizedAccessException("Access denied"));
+            Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsUnauthorizedAccessException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
+        {
+            ThrowingContentLoader loader = new(new UnauthorizedAccessException("Access denied"));
+            Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsFileNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
+        {
+            ThrowingContentLoader loader = new(new FileNotFoundException("File not found"));
+            Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsFileNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
+        {
+            ThrowingContentLoader loader = new(new FileNotFoundException("File not found"));
+            Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsDirectoryNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
+        {
+            ThrowingContentLoader loader = new(new DirectoryNotFoundException("Directory not found"));
+            Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsDirectoryNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
+        {
+            ThrowingContentLoader loader = new(new DirectoryNotFoundException("Directory not found"));
+            Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsNotSupportedException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
+        {
+            ThrowingContentLoader loader = new(new NotSupportedException("Not supported"));
+            Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsNotSupportedException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
+        {
+            ThrowingContentLoader loader = new(new NotSupportedException("Not supported"));
+            Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsStackOverflowException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
+        {
+            ThrowingContentLoader loader = new(new StackOverflowException("Stack overflow"));
+            Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
+        }
+
+        [TestCase("testSoundEffect")]
+        [TestCase("sounds/background")]
+        public void GivenLoadSoundEffectThrowsStackOverflowException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
+        {
+            ThrowingContentLoader loader = new(new StackOverflowException("Stack overflow"));
+            Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
+        }
+
+        // TryLoad* — path edge cases
+
+        [TestCase(".")]
+        [TestCase("..")]
+        [TestCase("./relative")]
+        [TestCase("../parent")]
+        [TestCase("path/with spaces/file")]
+        [TestCase("path/with-unicode/文件")]
+        [TestCase("path/with/special/chars_!@#$%^&*()")]
+        [TestCase("very/long/path/that/goes/deep/into/the/directory/structure/with/many/segments")]
+        public void GivenEdgeCasePath_WhenTryLoadSoundEffectIsCalled_ThenLoadSoundEffectIsCalledWithThatPath(string path)
+        {
+            spyLoader.TryLoadSoundEffect(path);
+            Assert.That(spyLoader.LastSoundEffectPath, Is.EqualTo(path));
+        }
+
+        [TestCase(".")]
+        [TestCase("..")]
+        [TestCase("./relative")]
+        [TestCase("../parent")]
+        [TestCase("path/with spaces/file")]
+        [TestCase("path/with-unicode/文件")]
+        [TestCase("path/with/special/chars_!@#$%^&*()")]
+        [TestCase("very/long/path/that/goes/deep/into/the/directory/structure/with/many/segments")]
+        public void GivenEdgeCasePath_WhenTryLoadSpriteFontIsCalled_ThenLoadSpriteFontIsCalledWithThatPath(string path)
+        {
+            spyLoader.TryLoadSpriteFont(path);
+            Assert.That(spyLoader.LastSpriteFontPath, Is.EqualTo(path));
+        }
+
+        [TestCase(".")]
+        [TestCase("..")]
+        [TestCase("./relative")]
+        [TestCase("../parent")]
+        [TestCase("path/with spaces/file")]
+        [TestCase("path/with-unicode/文件")]
+        [TestCase("path/with/special/chars_!@#$%^&*()")]
+        [TestCase("very/long/path/that/goes/deep/into/the/directory/structure/with/many/segments")]
+        public void GivenEdgeCasePath_WhenTryLoadTexture2DIsCalled_ThenLoadTexture2DIsCalledWithThatPath(string path)
+        {
+            spyLoader.TryLoadTexture2D(path);
+            Assert.That(spyLoader.LastTexture2DPath, Is.EqualTo(path));
+        }
+
+        // TryLoad* — multiple calls independence
+
+        [Test]
+        public void GivenMultipleCallsToTryLoadSoundEffect_EachCallIsIndependent()
+        {
+            spyLoader.TryLoadSoundEffect("first");
+            spyLoader.TryLoadSoundEffect("second");
+            spyLoader.TryLoadSoundEffect("third");
+
+            Assert.That(spyLoader.LastSoundEffectPath, Is.EqualTo("third"));
+        }
+
+        [Test]
+        public void GivenMultipleCallsToTryLoadSpriteFont_EachCallIsIndependent()
+        {
+            spyLoader.TryLoadSpriteFont("first");
+            spyLoader.TryLoadSpriteFont("second");
+            spyLoader.TryLoadSpriteFont("third");
+
+            Assert.That(spyLoader.LastSpriteFontPath, Is.EqualTo("third"));
+        }
+
+        [Test]
+        public void GivenMultipleCallsToTryLoadTexture2D_EachCallIsIndependent()
+        {
+            spyLoader.TryLoadTexture2D("first");
+            spyLoader.TryLoadTexture2D("second");
+            spyLoader.TryLoadTexture2D("third");
+
+            Assert.That(spyLoader.LastTexture2DPath, Is.EqualTo("third"));
+        }
+
+        // TryLoad* — exception suppression verification
+
+        [Test]
+        public void GivenLoadThrowsException_WhenTryLoadIsCalled_ExceptionIsFullySuppressed()
+        {
+            InvalidOperationException exception = new("Test exception");
+            ThrowingContentLoader loader = new(exception);
+
+            // Should not throw, should return null
+            SoundEffect soundResult = loader.TryLoadSoundEffect("test");
+            Assert.That(soundResult, Is.Null);
+
+            SpriteFont fontResult = loader.TryLoadSpriteFont("test");
+            Assert.That(fontResult, Is.Null);
+
+            Texture2D textureResult = loader.TryLoadTexture2D("test");
+            Assert.That(textureResult, Is.Null);
+        }
     }
 }
