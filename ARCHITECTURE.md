@@ -385,11 +385,11 @@ Callers can construct `Bitmap` from dimensions, `Size2D`, or an existing ImageSh
 | Content adapters | [`NuciXNA.DataAccess/Content`](NuciXNA.DataAccess/Content) | Base, MonoGame pipeline, and plain-file implementations. |
 | Bitmap façade | [`NuciXNA.DataAccess/IO/Bitmap.cs`](NuciXNA.DataAccess/IO/Bitmap.cs) | ImageSharp adaptation and pixel API. |
 | Test project | [`NuciXNA.DataAccess.UnitTests`](NuciXNA.DataAccess.UnitTests) | NUnit unit tests and package references. |
-| Detailed traceability | [`docs/TRACEABILITY.md`](docs/TRACEABILITY.md) | Feature-to-code and test-to-behaviour map. |
+
 | CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) | GitHub Actions restore, build, and test workflow. |
 
 ## 📚 Related Documentation
 
 - [`README.md`](README.md) provides installation, usage, supported formats, and contributor commands.
-- [`docs/TRACEABILITY.md`](docs/TRACEABILITY.md) maps each material feature and test suite to implementation and known gaps.
+
 - [`LICENSE`](LICENSE) records the GPL-3.0-or-later licence.
