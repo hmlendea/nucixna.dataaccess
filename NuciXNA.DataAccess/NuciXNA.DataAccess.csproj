@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/hmlendea/nucixna.dataaccess</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageTags>XNA MonoGame DataAccess</PackageTags>
+    <DesignTimeBuild>true</DesignTimeBuild>
   </PropertyGroup>
 
   <ItemGroup>
