@@ -495,11 +495,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [Test]
         public void GivenMultipleCallsToTryLoadSoundEffect_EachCallIsIndependent()
         {
-            var callCount = 0;
-            var loader = new ContentLoader
-            {
-                // Can't override abstract methods directly, use spy
-            };
             spyLoader.TryLoadSoundEffect("first");
             spyLoader.TryLoadSoundEffect("second");
             spyLoader.TryLoadSoundEffect("third");
@@ -536,14 +531,14 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             var loader = new ThrowingContentLoader(exception);
 
             // Should not throw, should return null
-            var result = loader.TryLoadSoundEffect("test");
-            Assert.That(result, Is.Null);
+            SoundEffect soundResult = loader.TryLoadSoundEffect("test");
+            Assert.That(soundResult, Is.Null);
 
-            result = loader.TryLoadSpriteFont("test");
-            Assert.That(result, Is.Null);
+            SpriteFont fontResult = loader.TryLoadSpriteFont("test");
+            Assert.That(fontResult, Is.Null);
 
-            result = loader.TryLoadTexture2D("test");
-            Assert.That(result, Is.Null);
+            Texture2D textureResult = loader.TryLoadTexture2D("test");
+            Assert.That(textureResult, Is.Null);
         }
     }
 }
