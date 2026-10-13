@@ -1,18 +1,35 @@
 [![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
 [![Latest Release](https://img.shields.io/github/v/release/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/releases/latest)
 [![Build Status](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://gnu.org/licenses/gpl-3.0)
+[![NuGet](https://img.shields.io/nuget/v/NuciXNA.DataAccess)](https://nuget.org/packages/NuciXNA.DataAccess)
+[![License](https://img.shields.io/github/license/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/blob/master/LICENSE)
 
 # NuciXNA.DataAccess
 
 Data access utilities for the NuciXNA ecosystem, built on top of MonoGame/XNA.
 
-## ✨ Features
+## 📑 Table of Contents
 
-- **Content loading** - loads `SoundEffect`, `SpriteFont`, and `Texture2D` assets via the MonoGame content pipeline with automatic plain-file fallback
-- **Missing-texture placeholder** - configurable pipeline fallback attempted when an asset cannot be located by either loader
-- **Custom loader injection** - accepts any `IContentLoader` implementation, enabling easy testing and custom asset sources
-- **Bitmap utility** - pixel-level image manipulation powered by ImageSharp, integrated with `NuciXNA.Primitives` types (`Colour`, `Point2D`, `Size2D`)
+- [Capabilities](#capabilities)
+- [Usage](#usage)
+- [Known Limitations](#known-limitations)
+- [Installation](#installation)
+- [Development](#development)
+- [Dependencies](#dependencies)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [Security](#security)
+- [Project Engagement](#project-engagement)
+- [License](#license)
+
+## ✨ Capabilities
+
+- **Content loading** — loads `SoundEffect`, `SpriteFont`, and `Texture2D` assets via the MonoGame content pipeline with automatic plain-file fallback
+- **Missing-texture placeholder** — configurable pipeline fallback attempted when an asset cannot be located by either loader
+- **Custom loader injection** — accepts any `IContentLoader` implementation, enabling easy testing and custom asset sources
+- **Bitmap utility** — pixel-level image manipulation powered by ImageSharp, integrated with `NuciXNA.Primitives` types (`Colour`, `Point2D`, `Size2D`)
 
 ## 🚀 Usage
 
@@ -61,16 +78,15 @@ image.Save("output.png");
 
 ## 📦 Installation
 
-[![Get it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciXNA.DataAccess)
+[![Obtain it from NuGet](https://raw.githubusercontent.com/hmlendea/readme-assets/master/badges/stores/nuget.png)](https://nuget.org/packages/NuciXNA.DataAccess)
 
-### .NET CLI
+### Package Manager Installation
 
 ```bash
 dotnet add package NuciXNA.DataAccess
 ```
 
-### Package Manager Console
-
+Or, via the `Package Manager Console`:
 ```powershell
 Install-Package NuciXNA.DataAccess
 ```
@@ -103,39 +119,49 @@ dotnet pack NuciXNA.DataAccess -c Release
 
 ### Dependencies
 
-| Package | Purpose |
-|---------|---------|
-| `MonoGame.Framework.DesktopGL` | XNA/MonoGame types (`Texture2D`, `SoundEffect`, `SpriteFont`, `GraphicsDevice`) |
-| `NuciXNA.Primitives` | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
-| `SixLabors.ImageSharp` | Pixel-level image decoding and encoding for `Bitmap` |
+| Package | Version | Scope | Purpose |
+|---------|---------|-------|---------|
+| `MonoGame.Framework.DesktopGL` | 3.8.4 | Runtime | XNA/MonoGame types (`Texture2D`, `SoundEffect`, `SpriteFont`, `GraphicsDevice`) |
+| `NuciXNA.Primitives` | 2.1.7 | Runtime | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
+| `SixLabors.ImageSharp` | 3.1.6 | Runtime | Pixel-level image decoding and encoding for `Bitmap` |
 
 ## 🗂️ Project Structure
 
 The solution contains the following projects:
 
-- `NuciXNA.DataAccess`: The main library with content loading and bitmap utilities.
-- `NuciXNA.DataAccess.UnitTests`: Unit tests for the main library.
+| Project | Type | Purpose |
+|---------|------|---------|
+| `NuciXNA.DataAccess` | Library | The main library with content loading and bitmap utilities |
+| `NuciXNA.DataAccess.UnitTests` | Test | Unit tests for the main library |
 
-The key directories inside `NuciXNA.DataAccess/` are:
+### Directories
 
 | Directory | Purpose |
 |-----------|---------|
-| `Content/` | Content loading infrastructure (`IContentLoader`, `ContentLoader`, `NuciContentManager`, `PipelineContentLoader`, `PlainFileContentLoader`) |
-| `IO/` | File I/O utilities (`Bitmap`) |
+| `NuciXNA.DataAccess/Content/` | Content loading infrastructure (`IContentLoader`, `ContentLoader`, `NuciContentManager`, `PipelineContentLoader`, `PlainFileContentLoader`) |
+| `NuciXNA.DataAccess/IO/` | File I/O utilities (`Bitmap`) |
 
 ## 🏗️ Architecture
+
+NuciXNA.DataAccess is a .NET 10 library with an interface-and-adapter content boundary, a singleton orchestration facade, and an independent bitmap adapter.
 
 See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
 
 ## 🤝 Contributing
 
-Contributions are welcome. Please:
-- Keep the changes cross-platform
-- Keep the existing public contract intact unless a breaking change is intentional
-- Keep the pull requests focused and consistent with the existing code style
-- Update the documentation when behaviour changes
-- Properly test all changes, including edge cases and error conditions
-- Add unit tests for any new or changed functionality
+You are welcome to submit any suggestion, feedback, or modification to this project.
+
+When doing so, please:
+- Maintain cross-platform compatibility
+- Preserve the existing public contract unless a breaking change is intentional
+- Submit focused pull requests that conform to the existing code style
+- Maintain your branch synchronised with `master`
+- Revise the documentation when functionality changes
+- Properly test all modifications, including edge cases and error conditions
+- Add tests for additional or modified functionality
+- Raise a new [issue](https://github.com/hmlendea/nucixna.dataaccess/issues) for problems or suggestions
+
+See the [contributing guidelines](./CONTRIBUTING.md) for details on how to report issues, suggest enhancements, and submit changes.
 
 ## 🔗 Related Projects
 
@@ -144,13 +170,21 @@ Contributions are welcome. Please:
 - [NuciXNA.Input](https://github.com/hmlendea/nucixna.input): Input handling (keyboard, mouse, gamepad) for NuciXNA games
 - [NuciXNA.Primitives](https://github.com/hmlendea/nucixna.primitives): Primitive types (`Colour`, `Point2D`, `Size2D`) shared across the NuciXNA ecosystem
 
-## 💝 Support
+## 🔒 Security
 
-Found a bug or have a suggestion? [Open an issue](https://github.com/hmlendea/nucixna.dataaccess/issues)!
+NuciXNA.DataAccess follows coordinated disclosure for security vulnerabilities.
 
-If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or giving a ⭐️ on GitHub!
+For information on reporting security vulnerabilities, see [SECURITY.md](./SECURITY.md).
+
+## 💝 Project Engagement
+
+Discovered a problem or have a suggestion? [Open an issue](https://github.com/hmlendea/nucixna.dataaccess/issues)!
+
+If you find this project useful, consider [funding it](https://hmlendea.go.ro/funding) or starring ⭐️ it on GitHub!
+
+[![Donate](https://raw.githubusercontent.com/hmlendea/readme-assets/master/donate_generic.png)](https://hmlendea.go.ro/funding)
 
 ## 📄 License
 
-Licensed under the `GNU General Public License v3.0` or later.
-See [LICENSE](./LICENSE) for details.
+This project is being distributed under the `GNU General Public License v3.0` or later.
+See [LICENSE](./LICENSE) for further information.
