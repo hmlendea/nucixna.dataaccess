@@ -720,8 +720,8 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [Test]
         public void GivenInstanceAccessedMultipleTimes_SameInstanceIsReturned()
         {
-            var instance1 = NuciContentManager.Instance;
-            var instance2 = NuciContentManager.Instance;
+            NuciContentManager instance1 = NuciContentManager.Instance;
+            NuciContentManager instance2 = NuciContentManager.Instance;
 
             Assert.That(instance1, Is.SameAs(instance2));
         }

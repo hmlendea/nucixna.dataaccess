@@ -370,7 +370,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsUnauthorizedAccessException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
         {
-            var loader = new ThrowingContentLoader(new UnauthorizedAccessException("Access denied"));
+            ThrowingContentLoader loader = new(new UnauthorizedAccessException("Access denied"));
             Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
         }
 
@@ -378,7 +378,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsUnauthorizedAccessException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
         {
-            var loader = new ThrowingContentLoader(new UnauthorizedAccessException("Access denied"));
+            ThrowingContentLoader loader = new(new UnauthorizedAccessException("Access denied"));
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
@@ -386,7 +386,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsFileNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
         {
-            var loader = new ThrowingContentLoader(new FileNotFoundException("File not found"));
+            ThrowingContentLoader loader = new(new FileNotFoundException("File not found"));
             Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
         }
 
@@ -394,7 +394,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsFileNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
         {
-            var loader = new ThrowingContentLoader(new FileNotFoundException("File not found"));
+            ThrowingContentLoader loader = new(new FileNotFoundException("File not found"));
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
@@ -402,7 +402,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsDirectoryNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
         {
-            var loader = new ThrowingContentLoader(new DirectoryNotFoundException("Directory not found"));
+            ThrowingContentLoader loader = new(new DirectoryNotFoundException("Directory not found"));
             Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
         }
 
@@ -410,7 +410,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsDirectoryNotFoundException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
         {
-            var loader = new ThrowingContentLoader(new DirectoryNotFoundException("Directory not found"));
+            ThrowingContentLoader loader = new(new DirectoryNotFoundException("Directory not found"));
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
@@ -418,7 +418,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsNotSupportedException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
         {
-            var loader = new ThrowingContentLoader(new NotSupportedException("Not supported"));
+            ThrowingContentLoader loader = new(new NotSupportedException("Not supported"));
             Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
         }
 
@@ -426,7 +426,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsNotSupportedException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
         {
-            var loader = new ThrowingContentLoader(new NotSupportedException("Not supported"));
+            ThrowingContentLoader loader = new(new NotSupportedException("Not supported"));
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
@@ -434,7 +434,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsStackOverflowException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
         {
-            var loader = new ThrowingContentLoader(new StackOverflowException("Stack overflow"));
+            ThrowingContentLoader loader = new(new StackOverflowException("Stack overflow"));
             Assert.That(() => loader.TryLoadSoundEffect(path), Throws.Nothing);
         }
 
@@ -442,7 +442,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsStackOverflowException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
         {
-            var loader = new ThrowingContentLoader(new StackOverflowException("Stack overflow"));
+            ThrowingContentLoader loader = new(new StackOverflowException("Stack overflow"));
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
@@ -527,8 +527,8 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [Test]
         public void GivenLoadThrowsException_WhenTryLoadIsCalled_ExceptionIsFullySuppressed()
         {
-            var exception = new InvalidOperationException("Test exception");
-            var loader = new ThrowingContentLoader(exception);
+            InvalidOperationException exception = new("Test exception");
+            ThrowingContentLoader loader = new(exception);
 
             // Should not throw, should return null
             SoundEffect soundResult = loader.TryLoadSoundEffect("test");

@@ -544,7 +544,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.Dispose();
 
-            Assert.That(() => { var _ = subject[0, 0]; }, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => { object _ = subject[0, 0]; }, Throws.TypeOf<ObjectDisposedException>());
             Assert.That(() => subject[0, 0] = OpaqueRed, Throws.TypeOf<ObjectDisposedException>());
         }
 
@@ -553,14 +553,14 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenValidPngPath_WhenLoadIsCalled_ThenBitmapIsReturned()
         {
-            using var tempFile = new TempFile(".png");
-            using (var image = new Image<Rgba32>(16, 16))
+            using TempFile tempFile = new(".png");
+            using (Image<Rgba32> image = new(16, 16))
             {
                 image[0, 0] = new Rgba32(255, 0, 0, 255);
                 image.Save(tempFile.Path);
             }
 
-            using var bitmap = Bitmap.Load(tempFile.Path);
+            using Bitmap bitmap = Bitmap.Load(tempFile.Path);
 
             Assert.That(bitmap, Is.Not.Null);
             Assert.That(bitmap.Size.Width, Is.EqualTo(16));
@@ -576,7 +576,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenInvalidImagePath_WhenLoadIsCalled_ThenExceptionIsThrown()
         {
-            using var tempFile = new TempFile(".txt");
+            using TempFile tempFile = new(".txt");
             System.IO.File.WriteAllText(tempFile.Path, "not an image");
 
             Assert.That(() => Bitmap.Load(tempFile.Path), Throws.Exception);
@@ -590,13 +590,13 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             subject.SetPixel(0, 0, OpaqueRed);
             subject.SetPixel(7, 7, OpaqueBlue);
 
-            using var tempFile = new TempFile(".png");
+            using TempFile tempFile = new(".png");
 
             subject.Save(tempFile.Path);
 
             Assert.That(System.IO.File.Exists(tempFile.Path), Is.True);
 
-            using var loaded = Bitmap.Load(tempFile.Path);
+            using Bitmap loaded = Bitmap.Load(tempFile.Path);
             Assert.That(loaded.GetPixel(0, 0), Is.EqualTo(OpaqueRed));
             Assert.That(loaded.GetPixel(7, 7), Is.EqualTo(OpaqueBlue));
         }
@@ -604,8 +604,8 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenBitmap_WhenSaveIsCalledWithDirectory_ThenFileIsCreatedInDirectory()
         {
-            using var tempDir = new TempDirectory();
-            var filePath = System.IO.Path.Combine(tempDir.Path, "output.png");
+            using TempDirectory tempDir = new();
+            string filePath = System.IO.Path.Combine(tempDir.Path, "output.png");
 
             subject.Save(filePath);
 
@@ -617,15 +617,15 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueRed);
 
-            using var tempFile = new TempFile(".png");
+            using TempFile tempFile = new(".png");
 
             subject.Save(tempFile.Path);
-            using var firstLoad = Bitmap.Load(tempFile.Path);
+            using Bitmap firstLoad = Bitmap.Load(tempFile.Path);
             Assert.That(firstLoad.GetPixel(0, 0), Is.EqualTo(OpaqueRed));
 
             subject.SetPixel(0, 0, OpaqueBlue);
             subject.Save(tempFile.Path);
-            using var secondLoad = Bitmap.Load(tempFile.Path);
+            using Bitmap secondLoad = Bitmap.Load(tempFile.Path);
             Assert.That(secondLoad.GetPixel(0, 0), Is.EqualTo(OpaqueBlue));
         }
 
@@ -636,11 +636,11 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject.SetPixel(0, 0, OpaqueGreen);
 
-            using var tempFile = new TempFile(".png");
+            using TempFile tempFile = new(".png");
 
             subject.Save(tempFile.Path);
 
-            using var loaded = Bitmap.Load(tempFile.Path);
+            using Bitmap loaded = Bitmap.Load(tempFile.Path);
             Assert.That(loaded.GetPixel(0, 0), Is.EqualTo(OpaqueGreen));
         }
 
@@ -649,7 +649,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenColourWithFullAlpha_WhenSetAndGet_ThenColourIsPreserved()
         {
-            var colour = Colour.FromArgb(255, 100, 150, 200);
+            Colour colour = Colour.FromArgb(255, 100, 150, 200);
 
             subject.SetPixel(0, 0, colour);
 
@@ -659,7 +659,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenColourWithZeroAlpha_WhenSetAndGet_ThenColourIsPreserved()
         {
-            var colour = Colour.FromArgb(0, 255, 255, 255);
+            Colour colour = Colour.FromArgb(0, 255, 255, 255);
 
             subject.SetPixel(0, 0, colour);
 
@@ -669,7 +669,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenColourWithPartialAlpha_WhenSetAndGet_ThenColourIsPreserved()
         {
-            var colour = Colour.FromArgb(128, 64, 128, 192);
+            Colour colour = Colour.FromArgb(128, 64, 128, 192);
 
             subject.SetPixel(0, 0, colour);
 
@@ -687,7 +687,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [TestCase(0, 255, 255, 255)]
         public void GivenVariousColours_WhenSetAndGet_ThenColourIsPreserved(byte a, byte r, byte g, byte b)
         {
-            var colour = Colour.FromArgb(a, r, g, b);
+            Colour colour = Colour.FromArgb(a, r, g, b);
 
             subject.SetPixel(0, 0, colour);
 
@@ -709,7 +709,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         [Test]
         public void GivenBitmapFromSize2D_WhenSizeIsAccessed_ThenReturnsSameSize2D()
         {
-            var size = new Size2D(42, 84);
+            Size2D size = new(42, 84);
             subject.Dispose();
             subject = new Bitmap(size);
 
@@ -769,7 +769,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             // Point2D with negative coordinates - should work if within bounds
             // This tests the Point2D struct behavior, not Bitmap bounds checking
-            var point = new Point2D(-1, -1);
+            Point2D point = new(-1, -1);
             // Just verify no exception on creation
             Assert.That(point.X, Is.EqualTo(-1));
             Assert.That(point.Y, Is.EqualTo(-1));
@@ -786,7 +786,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Path = System.IO.Path.GetTempFileName();
                 if (!string.IsNullOrEmpty(extension))
                 {
-                    var newPath = System.IO.Path.ChangeExtension(Path, extension);
+                    string newPath = System.IO.Path.ChangeExtension(Path, extension);
                     System.IO.File.Move(Path, newPath);
                     Path = newPath;
                 }
