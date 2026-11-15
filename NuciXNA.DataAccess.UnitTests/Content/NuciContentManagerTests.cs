@@ -14,8 +14,8 @@ namespace NuciXNA.DataAccess.UnitTests.Content
     [TestFixture]
     public sealed class NuciContentManagerTests
     {
-        private Mock<IContentLoader> pipelineContentLoaderMock;
-        private Mock<IContentLoader> plainFileContentLoaderMock;
+        private Mock<IContentLoader> pipelineContentLoaderMock = null!;
+        private Mock<IContentLoader> plainFileContentLoaderMock = null!;
 
         [SetUp]
         public void SetUp()
@@ -29,8 +29,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             NuciContentManager.MissingTexturePlaceholder = null;
         }
-
-        // LoadSoundEffect — pipeline succeeds via TryLoad
 
         [Test]
         public void GivenPipelineContentExists_AndPlainFileExists_WhenLoadSoundEffectIsCalled_ThenNoExceptionIsThrown()
@@ -51,7 +49,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()));
@@ -66,7 +64,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()));
@@ -81,7 +79,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()))
@@ -99,7 +97,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()));
@@ -116,7 +114,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()));
@@ -131,7 +129,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadSoundEffect(It.IsAny<string>()))
-                .Returns((SoundEffect)null);
+                .Returns((SoundEffect?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadSoundEffect(It.IsAny<string>()));
@@ -140,8 +138,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock.Verify(loader => loader.TryLoadSoundEffect(It.IsAny<string>()), Times.Once);
         }
-
-        // LoadSpriteFont
 
         [Test]
         public void GivenPipelineContentExists_WhenLoadSpriteFontIsCalled_ThenNoExceptionIsThrown()
@@ -212,14 +208,12 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             pipelineContentLoaderMock.Verify(loader => loader.LoadSpriteFont(path), Times.Once);
         }
 
-        // LoadTexture2D — no MissingTexturePlaceholder
-
         [Test]
         public void GivenPipelineTryLoadReturnsNull_AndNoMissingTexturePlaceholder_WhenLoadTexture2DIsCalled_ThenPlainFileLoadIsCalled()
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -234,7 +228,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -249,13 +243,13 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D)null!);
 
-            Texture2D result = NuciContentManager.Instance.LoadTexture2D("testTexture");
+            Texture2D? result = NuciContentManager.Instance.LoadTexture2D("testTexture");
 
             Assert.That(
                 result,
@@ -267,7 +261,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -282,7 +276,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()))
@@ -300,7 +294,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -317,7 +311,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -327,8 +321,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             plainFileContentLoaderMock.Verify(loader => loader.LoadTexture2D(path), Times.Once);
         }
 
-        // LoadTexture2D — empty and whitespace MissingTexturePlaceholder (treated as absent)
-
         [Test]
         public void GivenEmptyMissingTexturePlaceholder_AndPipelineTryLoadReturnsNull_WhenLoadTexture2DIsCalled_ThenPlainFileLoadIsCalled()
         {
@@ -336,7 +328,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -353,7 +345,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -370,7 +362,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -387,7 +379,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -397,8 +389,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             plainFileContentLoaderMock.Verify(loader => loader.TryLoadTexture2D(It.IsAny<string>()), Times.Never);
         }
 
-        // LoadTexture2D — with MissingTexturePlaceholder
-
         [Test]
         public void GivenMissingTexturePlaceholderIsSet_AndPipelineTryLoadReturnsNull_WhenLoadTexture2DIsCalled_ThenPlainFileTryLoadIsCalled()
         {
@@ -406,7 +396,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -420,7 +410,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -434,11 +424,11 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -455,11 +445,11 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -473,11 +463,11 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()))
@@ -495,17 +485,17 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D)null!);
 
-            Texture2D result = NuciContentManager.Instance.LoadTexture2D("testTexture");
+            Texture2D? result = NuciContentManager.Instance.LoadTexture2D("testTexture");
 
             Assert.That(
                 result,
@@ -522,14 +512,12 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D(path);
 
             plainFileContentLoaderMock.Verify(loader => loader.TryLoadTexture2D(path), Times.Once);
         }
-
-        // LoadSoundEffect — additional edge cases
 
         [Test]
         public void GivenPipelineTryLoadThrows_WhenLoadSoundEffectIsCalled_ThenExceptionIsThrown()
@@ -543,8 +531,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 Throws.TypeOf<InvalidOperationException>());
         }
 
-        // LoadSpriteFont — additional edge cases
-
         [Test]
         public void GivenPipelineLoadThrows_WhenLoadSpriteFontIsCalled_ThenExceptionIsThrown()
         {
@@ -556,8 +542,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 () => NuciContentManager.Instance.LoadSpriteFont("testSpriteFont"),
                 Throws.TypeOf<InvalidOperationException>());
         }
-
-        // LoadTexture2D — additional edge cases with MissingTexturePlaceholder
 
         [Test]
         public void GivenMissingTexturePlaceholderIsSet_AndPipelineTryLoadThrows_WhenLoadTexture2DIsCalled_ThenExceptionIsThrown()
@@ -580,7 +564,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
@@ -591,8 +575,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 Throws.TypeOf<InvalidOperationException>());
         }
 
-        // LoadTexture2D — MissingTexturePlaceholder state management
-
         [Test]
         public void GivenMissingTexturePlaceholderChanged_WhenLoadTexture2DIsCalled_ThenNewPlaceholderIsUsed()
         {
@@ -600,11 +582,11 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -617,11 +599,11 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             NuciContentManager.Instance.LoadTexture2D("testTexture");
 
@@ -635,7 +617,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()));
@@ -644,8 +626,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
 
             plainFileContentLoaderMock.Verify(loader => loader.TryLoadTexture2D("testTexture"), Times.Once);
         }
-
-        // LoadTexture2D — path edge cases
 
         [TestCase(".")]
         [TestCase("..")]
@@ -659,7 +639,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -681,7 +661,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         {
             pipelineContentLoaderMock
                 .Setup(loader => loader.TryLoadTexture2D(It.IsAny<string>()))
-                .Returns((Texture2D)null);
+                .Returns((Texture2D?)null);
 
             plainFileContentLoaderMock
                 .Setup(loader => loader.LoadTexture2D(It.IsAny<string>()));
@@ -691,14 +671,10 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             plainFileContentLoaderMock.Verify(loader => loader.LoadTexture2D(path), Times.Once);
         }
 
-        // LoadContent — reinitialization (tested implicitly by other tests)
-
-        // LoadContent — null validation (implementation does not validate; NullReferenceException occurs on use)
-
         [Test]
         public void GivenNullPipelineLoader_WhenLoadContentIsCalled_ThenNullReferenceExceptionOnUse()
         {
-            NuciContentManager.Instance.LoadContent(null, plainFileContentLoaderMock.Object);
+            NuciContentManager.Instance.LoadContent(null!, plainFileContentLoaderMock.Object);
 
             Assert.That(
                 () => NuciContentManager.Instance.LoadSoundEffect("test"),
@@ -708,25 +684,21 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [Test]
         public void GivenNullPlainFileLoader_WhenLoadContentIsCalled_ThenNullReferenceExceptionOnUse()
         {
-            NuciContentManager.Instance.LoadContent(pipelineContentLoaderMock.Object, null);
+            NuciContentManager.Instance.LoadContent(pipelineContentLoaderMock.Object, null!);
 
             Assert.That(
                 () => NuciContentManager.Instance.LoadSoundEffect("test"),
                 Throws.TypeOf<NullReferenceException>());
         }
 
-        // Instance — singleton behavior
-
         [Test]
-        public void GivenInstanceAccessedMultipleTimes_SameInstanceIsReturned()
+        public void GivenInstanceAccessedMultipleTimes_WhenInstanceIsRequested_ThenSameInstanceIsReturned()
         {
             NuciContentManager instance1 = NuciContentManager.Instance;
             NuciContentManager instance2 = NuciContentManager.Instance;
 
             Assert.That(instance1, Is.SameAs(instance2));
         }
-
-        // MissingTexturePlaceholder — property behavior
 
         [Test]
         public void GivenMissingTexturePlaceholderSet_WhenGetIsCalled_ThenValueIsReturned()

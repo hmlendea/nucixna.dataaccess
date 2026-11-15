@@ -6,7 +6,7 @@
 NuciXNA.DataAccess/
 ├── ARCHITECTURE.md                 # Verified current architecture
 ├── LICENSE                         # GPL-3.0-or-later
-├── NuciXNA.DataAccess.sln          # Solution file
+├── NuciXNA.DataAccess.slnx          # Solution file
 ├── README.md                       # Installation, usage, development
 ├── docs/                           # Generated documentation (this directory)
 │   ├── INDEX.md
@@ -57,9 +57,23 @@ NuciXNA.DataAccess/
     ├── NuciXNA.DataAccess.UnitTests.csproj
     ├── Content/
     │   ├── ContentLoaderTests.cs   # ContentLoader base class tests
-    │   └── NuciContentManagerTests.cs # Manager orchestration tests
+    │   ├── NuciContentManagerTests.cs # Manager orchestration tests
+    │   ├── ThrowingContentLoader.cs   # Throwing test double
+    │   ├── NullReturningContentLoader.cs # Null-returning test double
+    │   └── SpyContentLoader.cs        # Path-capturing test double
     └── IO/
-        └── BitmapTests.cs          # Bitmap tests
+        ├── BitmapTests.cs             # Bitmap construction, pixel access, disposal
+        ├── TempFile.cs                # Temporary file helper
+        └── TempDirectory.cs           # Temporary directory helper
+└── NuciXNA.DataAccess.ArchitectureTests/ # Architecture test project
+    ├── ArchitectureTestPaths.cs    # Repository path resolution
+    ├── SourceFileIndex.cs           # Cached Roslyn parse of every source file
+    ├── SourceText.cs                # Raw source lines for formatting rules
+    ├── DependencyArchitectureTests.cs # Dependency and reference boundaries
+    ├── ProjectConventionTests.cs   # Project and solution conventions
+    ├── ProductionCodeConventionTests.cs # C# coding conventions
+    ├── SourceFileConventionTests.cs # Source-file conventions
+    └── TestSourceConventionTests.cs # Test-source conventions
 ```
 
 ## Module Organisation
@@ -75,8 +89,14 @@ NuciXNA.DataAccess/
 
 | Directory | Namespace | Responsibility |
 |-----------|-----------|----------------|
-| `Content/` | `NuciXNA.DataAccess.UnitTests.Content` | Content loading tests |
-| `IO/` | `NuciXNA.DataAccess.UnitTests.IO` | Bitmap tests |
+| `Content/` | `NuciXNA.DataAccess.UnitTests.Content` | Content loading tests and test doubles |
+| `IO/` | `NuciXNA.DataAccess.UnitTests.IO` | Bitmap tests and file helpers |
+
+### NuciXNA.DataAccess.ArchitectureTests (Tests)
+
+| File | Namespace | Responsibility |
+|------|-----------|----------------|
+| `/` | `NuciXNA.DataAccess.ArchitectureTests` | Dependency, project, production-code, source-file, and test-source fitness tests |
 
 ## Project Files
 
@@ -87,13 +107,16 @@ NuciXNA.DataAccess/
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>NuciXNA.DataAccess</RootNamespace>
-    <Version>4.0.4</Version>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Version>4.0.5</Version>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
-    <PackageReference Include="NuciXNA.Primitives" Version="2.1.7" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+    <PackageReference Include="NuciXNA.Primitives" Version="2.1.8" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" />
   </ItemGroup>
 </Project>
 ```
@@ -104,14 +127,49 @@ NuciXNA.DataAccess/
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>NuciXNA.DataAccess.UnitTests</RootNamespace>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="NUnit" Version="4.6.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
+    <PackageReference Include="Moq" Version="4.21.0" />
+    <PackageReference Include="NUnit" Version="5.0.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NuciXNA.DataAccess\NuciXNA.DataAccess.csproj" />
+  </ItemGroup>
+</Project>
+```
+
+### NuciXNA.DataAccess.ArchitectureTests.csproj
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>NuciXNA.DataAccess.ArchitectureTests</RootNamespace>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="NUnit" Version="5.0.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+    <PackageReference Include="TngTech.ArchUnitNET" Version="0.13.5" />
+    <PackageReference Include="TngTech.ArchUnitNET.NUnit" Version="0.13.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NuciXNA.DataAccess\NuciXNA.DataAccess.csproj" />

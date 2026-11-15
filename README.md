@@ -102,13 +102,13 @@ All NuGet dependencies are restored automatically by `dotnet restore`.
 ### Build
 
 ```bash
-dotnet build NuciXNA.DataAccess.sln
+dotnet build NuciXNA.DataAccess.slnx
 ```
 
 ### Test
 
 ```bash
-dotnet test NuciXNA.DataAccess.sln
+dotnet test NuciXNA.DataAccess.slnx
 ```
 
 ### Release
@@ -122,8 +122,8 @@ dotnet pack NuciXNA.DataAccess -c Release
 | Package | Version | Scope | Purpose |
 |---------|---------|-------|---------|
 | `MonoGame.Framework.DesktopGL` | 3.8.4 | Runtime | XNA/MonoGame types (`Texture2D`, `SoundEffect`, `SpriteFont`, `GraphicsDevice`) |
-| `NuciXNA.Primitives` | 2.1.7 | Runtime | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
-| `SixLabors.ImageSharp` | 3.1.6 | Runtime | Pixel-level image decoding and encoding for `Bitmap` |
+| `NuciXNA.Primitives` | 2.1.8 | Runtime | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
+| `SixLabors.ImageSharp` | 4.1.2 | Runtime | Pixel-level image decoding and encoding for `Bitmap` |
 
 ## 🗂️ Project Structure
 
@@ -133,6 +133,7 @@ The solution contains the following projects:
 |---------|------|---------|
 | `NuciXNA.DataAccess` | Library | The main library with content loading and bitmap utilities |
 | `NuciXNA.DataAccess.UnitTests` | Test | Unit tests for the main library |
+| `NuciXNA.DataAccess.ArchitectureTests` | Test | Architecture and fitness tests enforcing dependency, project, and source-file conventions |
 
 ### Directories
 
@@ -140,12 +141,21 @@ The solution contains the following projects:
 |-----------|---------|
 | `NuciXNA.DataAccess/Content/` | Content loading infrastructure (`IContentLoader`, `ContentLoader`, `NuciContentManager`, `PipelineContentLoader`, `PlainFileContentLoader`) |
 | `NuciXNA.DataAccess/IO/` | File I/O utilities (`Bitmap`) |
+| `NuciXNA.DataAccess.UnitTests/` | Behavioural unit tests for the content and bitmap subsystems |
+| `NuciXNA.DataAccess.ArchitectureTests/` | Architecture and fitness tests for boundaries, projects, and source conventions |
 
 ## 🏗️ Architecture
 
 NuciXNA.DataAccess is a .NET 10 library with an interface-and-adapter content boundary, a singleton orchestration facade, and an independent bitmap adapter.
 
 See the [architecture documentation](./ARCHITECTURE.md) for the system context, principal components, runtime flows, ownership boundaries, dependencies, constraints, and extension points.
+
+## 📚 Documentation
+
+| Resource | Description |
+|----------|-------------|
+| [Architecture documentation](./ARCHITECTURE.md) | Current system context, component ownership, runtime flows, constraints, and extension points. |
+| [Traceability map](./docs/TRACEABILITY.md) | Feature-to-code, code-to-test, and coverage-gap audit. |
 
 ## 🤝 Contributing
 

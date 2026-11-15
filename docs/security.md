@@ -84,9 +84,9 @@
 
 | Dependency | Current Version | Known Issues |
 |------------|-----------------|--------------|
-| `SixLabors.ImageSharp` | 3.1.6 | Restore reports known high- and moderate-severity vulnerabilities |
+| `SixLabors.ImageSharp` | 4.1.2 | No known vulnerabilities reported by `dotnet list package --vulnerable` |
 | `MonoGame.Framework.DesktopGL` | 3.8.4 | Check MonoGame advisories |
-| `NuciXNA.Primitives` | 2.1.7 | Check upstream advisories |
+| `NuciXNA.Primitives` | 2.1.8 | Check upstream advisories |
 
 **Recommendation:** Regularly update dependencies and monitor security advisories.
 

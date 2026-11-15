@@ -28,7 +28,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
         private static Colour OpaqueYellow => Colour.FromArgb(255, 255, 255, 0);
 
-        private Bitmap subject;
+        private Bitmap subject = null!;
 
         [SetUp]
         public void SetUp()
@@ -41,8 +41,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         {
             subject?.Dispose();
         }
-
-        // Constructor — int, int
 
         [TestCase(4, 8)]
         [TestCase(8, 4)]
@@ -81,8 +79,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 subject.Size.Height,
                 Is.EqualTo(height));
         }
-
-        // Constructor — Size2D
 
         [TestCase(4, 8)]
         [TestCase(16, 32)]
@@ -146,8 +142,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Is.EqualTo(size.Height));
         }
 
-        // Constructor — Image<Rgba32>
-
         [TestCase(4, 8)]
         [TestCase(32, 16)]
         [TestCase(64, 128)]
@@ -182,8 +176,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Is.EqualTo(height));
         }
 
-        // GetPixel — default value on new bitmap
-
         [TestCase(0, 0)]
         [TestCase(0, 7)]
         [TestCase(7, 0)]
@@ -201,8 +193,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             => Assert.That(
                 subject.GetPixel(new Point2D(x, y)),
                 Is.EqualTo(TransparentBlack));
-
-        // SetPixel / GetPixel — round trips with coordinates
 
         [Test]
         public void GivenOpaqueRedPixelSetAtOrigin_WhenGetPixelIsCalled_ThenOpaqueRedIsReturned()
@@ -312,8 +302,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Is.EqualTo(TransparentBlack));
         }
 
-        // SetPixel / GetPixel — round trips with Point2D
-
         [TestCase(0, 0)]
         [TestCase(7, 7)]
         [TestCase(4, 4)]
@@ -354,8 +342,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Is.EqualTo(OpaqueGreen));
         }
 
-        // GetPixel — Point2D is consistent with int, int
-
         [TestCase(0, 0)]
         [TestCase(7, 7)]
         [TestCase(4, 4)]
@@ -368,8 +354,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 subject.GetPixel(new Point2D(x, y)),
                 Is.EqualTo(subject.GetPixel(x, y)));
         }
-
-        // Indexer — int, int
 
         [TestCase(0, 0)]
         [TestCase(7, 7)]
@@ -407,8 +391,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 subject[x, y],
                 Is.EqualTo(OpaqueGreen));
         }
-
-        // Indexer — Point2D
 
         [TestCase(0, 0)]
         [TestCase(7, 7)]
@@ -449,8 +431,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 Is.EqualTo(OpaqueBlue));
         }
 
-        // Indexer — Point2D and int, int are consistent
-
         [TestCase(0, 0)]
         [TestCase(7, 7)]
         [TestCase(4, 4)]
@@ -462,8 +442,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
                 subject[x, y],
                 Is.EqualTo(subject[new Point2D(x, y)]));
         }
-
-        // Dispose
 
         [Test]
         public void GivenBitmap_WhenDisposeIsCalled_ThenNoExceptionIsThrown()
@@ -498,8 +476,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(() => bitmap.Dispose(), Throws.Nothing);
         }
 
-        // Dispose — multiple calls
-
         [Test]
         public void GivenBitmap_WhenDisposeIsCalledTwice_ThenNoExceptionIsThrown()
         {
@@ -520,8 +496,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
             Assert.That(() => bitmap.Dispose(), Throws.Nothing);
         }
-
-        // Dispose — after dispose, operations throw ObjectDisposedException
 
         [Test]
         public void GivenDisposedBitmap_WhenGetPixelIsCalled_ThenObjectDisposedExceptionIsThrown()
@@ -547,8 +521,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(() => { object _ = subject[0, 0]; }, Throws.TypeOf<ObjectDisposedException>());
             Assert.That(() => subject[0, 0] = OpaqueRed, Throws.TypeOf<ObjectDisposedException>());
         }
-
-        // Load — static factory method
 
         [Test]
         public void GivenValidPngPath_WhenLoadIsCalled_ThenBitmapIsReturned()
@@ -577,12 +549,10 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         public void GivenInvalidImagePath_WhenLoadIsCalled_ThenExceptionIsThrown()
         {
             using TempFile tempFile = new(".txt");
-            System.IO.File.WriteAllText(tempFile.Path, "not an image");
+            File.WriteAllText(tempFile.Path, "not an image");
 
             Assert.That(() => Bitmap.Load(tempFile.Path), Throws.Exception);
         }
-
-        // Save — instance method
 
         [Test]
         public void GivenBitmapWithPixels_WhenSaveIsCalled_ThenFileIsCreated()
@@ -594,7 +564,7 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
             subject.Save(tempFile.Path);
 
-            Assert.That(System.IO.File.Exists(tempFile.Path), Is.True);
+            Assert.That(File.Exists(tempFile.Path));
 
             using Bitmap loaded = Bitmap.Load(tempFile.Path);
             Assert.That(loaded.GetPixel(0, 0), Is.EqualTo(OpaqueRed));
@@ -605,11 +575,11 @@ namespace NuciXNA.DataAccess.UnitTests.IO
         public void GivenBitmap_WhenSaveIsCalledWithDirectory_ThenFileIsCreatedInDirectory()
         {
             using TempDirectory tempDir = new();
-            string filePath = System.IO.Path.Combine(tempDir.Path, "output.png");
+            string filePath = Path.Combine(tempDir.Path, "output.png");
 
             subject.Save(filePath);
 
-            Assert.That(System.IO.File.Exists(filePath), Is.True);
+            Assert.That(File.Exists(filePath));
         }
 
         [Test]
@@ -629,8 +599,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(secondLoad.GetPixel(0, 0), Is.EqualTo(OpaqueBlue));
         }
 
-        // Save — format preservation
-
         [Test]
         public void GivenBitmap_WhenSavedAsPng_ThenCanBeLoadedAsPng()
         {
@@ -643,8 +611,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             using Bitmap loaded = Bitmap.Load(tempFile.Path);
             Assert.That(loaded.GetPixel(0, 0), Is.EqualTo(OpaqueGreen));
         }
-
-        // Colour round-trip — ARGB to RGBA conversion
 
         [Test]
         public void GivenColourWithFullAlpha_WhenSetAndGet_ThenColourIsPreserved()
@@ -694,8 +660,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(subject.GetPixel(0, 0), Is.EqualTo(colour));
         }
 
-        // Size property
-
         [Test]
         public void GivenBitmap_WhenSizeIsAccessed_ThenReturnsCorrectSize2D()
         {
@@ -717,8 +681,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(subject.Size.Height, Is.EqualTo(size.Height));
         }
 
-        // Edge cases — boundary coordinates
-
         [TestCase(0, 0)]
         [TestCase(0, 7)]
         [TestCase(7, 0)]
@@ -729,8 +691,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
 
             Assert.That(subject.GetPixel(x, y), Is.EqualTo(OpaqueRed));
         }
-
-        // Edge cases — large bitmap
 
         [Test]
         public void GivenLargeBitmap_WhenSetAndGetPixel_ThenWorksCorrectly()
@@ -747,8 +707,6 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(subject.GetPixel(512, 512), Is.EqualTo(OpaqueGreen));
         }
 
-        // Edge cases — non-square bitmap
-
         [Test]
         public void GivenNonSquareBitmap_WhenSetAndGetPixel_ThenWorksCorrectly()
         {
@@ -762,62 +720,12 @@ namespace NuciXNA.DataAccess.UnitTests.IO
             Assert.That(subject.GetPixel(99, 49), Is.EqualTo(OpaqueBlue));
         }
 
-        // Point2D edge cases
-
         [Test]
         public void GivenPoint2DWithNegativeCoordinates_WhenUsed_ThenBehaviourIsConsistent()
         {
-            // Point2D with negative coordinates - should work if within bounds
-            // This tests the Point2D struct behavior, not Bitmap bounds checking
             Point2D point = new(-1, -1);
-            // Just verify no exception on creation
             Assert.That(point.X, Is.EqualTo(-1));
             Assert.That(point.Y, Is.EqualTo(-1));
-        }
-
-        // Helper classes for file-based tests
-
-        private sealed class TempFile : IDisposable
-        {
-            public string Path { get; }
-
-            public TempFile(string extension)
-            {
-                Path = System.IO.Path.GetTempFileName();
-                if (!string.IsNullOrEmpty(extension))
-                {
-                    string newPath = System.IO.Path.ChangeExtension(Path, extension);
-                    System.IO.File.Move(Path, newPath);
-                    Path = newPath;
-                }
-            }
-
-            public void Dispose()
-            {
-                if (System.IO.File.Exists(Path))
-                {
-                    System.IO.File.Delete(Path);
-                }
-            }
-        }
-
-        private sealed class TempDirectory : IDisposable
-        {
-            public string Path { get; }
-
-            public TempDirectory()
-            {
-                Path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
-                System.IO.Directory.CreateDirectory(Path);
-            }
-
-            public void Dispose()
-            {
-                if (System.IO.Directory.Exists(Path))
-                {
-                    System.IO.Directory.Delete(Path, true);
-                }
-            }
         }
     }
 }

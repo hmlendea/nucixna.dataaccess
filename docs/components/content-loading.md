@@ -175,6 +175,7 @@ pipeline.TryLoadTexture2D(path)
 |-----------|----------|
 | [`ContentLoaderTests.cs`](../NuciXNA.DataAccess.UnitTests/Content/ContentLoaderTests.cs) | `TryLoad*` exception suppression (IOException, ArgumentException, InvalidOperationException, OutOfMemoryException, NullReferenceException), null return handling, path forwarding |
 | [`NuciContentManagerTests.cs`](../NuciXNA.DataAccess.UnitTests/Content/NuciContentManagerTests.cs) | Loader selection, propagation, placeholder branches, path forwarding, empty/whitespace placeholder handling |
+| [`DependencyArchitectureTests.cs`](../NuciXNA.DataAccess.ArchitectureTests/DependencyArchitectureTests.cs) | Content namespace type dependencies, isolation from the IO namespace, and subsystem cycle freedom |
 
 ## Integration
 

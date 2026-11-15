@@ -2,7 +2,7 @@
 
 ## Overview
 
-`NuciXNA.DataAccess.UnitTests` is an NUnit test project with 256 discovered test cases covering the content loading and bitmap subsystems.
+`NuciXNA.DataAccess.UnitTests` is an NUnit test project with 364 discovered test cases covering the content loading and bitmap subsystems. `NuciXNA.DataAccess.ArchitectureTests` is a separate NUnit fitness-test project with 78 fitness tests that enforces dependency boundaries, project and solution conventions, production and test source conventions, and C# coding rules using ArchUnitNET and Roslyn.
 
 ## Test Organisation
 
@@ -10,29 +10,48 @@
 NuciXNA.DataAccess.UnitTests/
 ├── Content/
 │   ├── ContentLoaderTests.cs      # ContentLoader base class behaviour
-│   └── NuciContentManagerTests.cs # Manager orchestration and policy
+│   ├── NuciContentManagerTests.cs # Manager orchestration and policy
+│   ├── ThrowingContentLoader.cs   # Throwing test double
+│   ├── NullReturningContentLoader.cs # Null-returning test double
+│   └── SpyContentLoader.cs        # Path-capturing test double
 └── IO/
-    └── BitmapTests.cs             # Bitmap construction, pixel access, disposal
+    ├── BitmapTests.cs             # Bitmap construction, pixel access, disposal
+    ├── TempFile.cs                # Temporary file helper
+    └── TempDirectory.cs           # Temporary directory helper
+
+NuciXNA.DataAccess.ArchitectureTests/
+├── ArchitectureTestPaths.cs       # Repository path resolution from assembly metadata
+├── SourceFileIndex.cs             # Cached Roslyn parse of every handwritten source file
+├── SourceText.cs                  # Raw source lines for formatting rules
+├── DependencyArchitectureTests.cs # Assembly dependency and project-reference rules
+├── ProjectConventionTests.cs      # Project and solution configuration conventions
+├── ProductionCodeConventionTests.cs # C# coding conventions for production sources
+├── SourceFileConventionTests.cs   # Source-file naming and namespace conventions
+└── TestSourceConventionTests.cs   # Unit-test and architecture-test source conventions
 ```
 
 ## Test Framework
 
 | Component | Version |
 |-----------|---------|
-| NUnit | 4.6.1 |
-| NUnit3TestAdapter | 6.2.0 |
-| Microsoft.NET.Test.Sdk | 18.8.1 |
-| Moq | 4.20.72 |
+| NUnit | 5.0.0 |
+| NUnit3TestAdapter | 6.3.1 |
+| Microsoft.NET.Test.Sdk | 18.10.1 |
+| Moq | 4.21.0 |
+| TngTech.ArchUnitNET | 0.13.5 |
+| TngTech.ArchUnitNET.NUnit | 0.13.5 |
 
 ## Running Tests
 
 ```bash
-dotnet test NuciXNA.DataAccess.sln
+dotnet test NuciXNA.DataAccess.slnx
 ```
 
-Or for the test project only:
+Or for a specific test project:
+
 ```bash
 dotnet test NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj
+dotnet test NuciXNA.DataAccess.ArchitectureTests/NuciXNA.DataAccess.ArchitectureTests.csproj
 ```
 
 ## Coverage Summary
@@ -105,6 +124,20 @@ dotnet test NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj
 | Concurrent initialisation | No tests for concurrent `LoadContent` calls |
 | Singleton identity | No tests for `Instance` returning same instance |
 | Placeholder thread isolation | No tests for placeholder state across threads |
+
+## Architecture Tests
+
+`NuciXNA.DataAccess.ArchitectureTests` uses `TngTech.ArchUnitNET`, `TngTech.ArchUnitNET.NUnit`, and Roslyn syntax analysis. It is cross-platform and resolves repository locations from build-time assembly metadata rather than the current directory. Source files are parsed once per run and cached in `SourceFileIndex`.
+
+| Fixture | Focus |
+|---------|-------|
+| `DependencyArchitectureTests` | Type-dependency isolation between `Content` and `IO`, subsystem cycle freedom, `InternalsVisibleTo` absence, no dependency on test assemblies or test frameworks, no root-namespace types, contract implementation, un-nested public types, approved dependency namespaces, project references, and approved package references |
+| `ProjectConventionTests` | Target framework, implicit usings, language version, nullable references, packability, test flags, `RootNamespace` matching, package ordering, sibling project folders, no `src` nesting, `.slnx`-only solutions, solution structure and ordering |
+| `ProductionCodeConventionTests` | No regions, global usings, `#nullable`, file-scoped namespaces, `var`, ternaries, `const`, `init`, `ref`/`out`, optional parameters, tuples, `== null`, `??`, empty catches, exception rethrows, partials, underscore-prefixed fields, custom exceptions; explicit accessibility; sealed classes; XML documentation; built-in aliases; braced control flow; expression-bodied methods; using placement; closing-delimiter spacing; trailing whitespace |
+| `SourceFileConventionTests` | One top-level type per file, exact filename-to-type matching, block namespaces, `#nullable` absence, namespace spacing, alphabetised using groups, no inline fully qualified types, `I`-prefixed interfaces |
+| `TestSourceConventionTests` | No nested test types, `Tests`-suffixed sealed fixtures, `Given_When_Then` test names, at least two `TestCase` values, no legacy assertion API, no reflection |
+
+Failures identify the violated boundary or convention and the offending file, project, or line.
 
 ## Test Design Principles
 

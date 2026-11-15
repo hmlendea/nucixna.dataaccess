@@ -140,6 +140,7 @@ No configuration. Behaviour is determined by:
 | Test File | Coverage |
 |-----------|----------|
 | [`BitmapTests.cs`](../NuciXNA.DataAccess.UnitTests/IO/BitmapTests.cs) | Construction dimensions, pixel round-trips (coordinates and `Point2D`), indexer equivalence, disposal without exception |
+| [`DependencyArchitectureTests.cs`](../NuciXNA.DataAccess.ArchitectureTests/DependencyArchitectureTests.cs) | IO namespace type dependencies, isolation from the Content namespace, and subsystem cycle freedom |
 
 **Coverage gaps:**
 - No tests for `Bitmap.Load`, `Bitmap.Save`

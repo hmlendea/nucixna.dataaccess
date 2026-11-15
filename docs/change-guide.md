@@ -149,6 +149,26 @@ public void GivenCondition_WhenOperation_ThenExpectedResult(int width, int heigh
 }
 ```
 
+### New Architecture Test
+
+**Project:** `NuciXNA.DataAccess.ArchitectureTests`
+
+Place compiled dependency rules in `DependencyArchitectureTests`, project or solution configuration rules in `ProjectConventionTests`, and source-file convention rules in `SourceFileConventionTests`. Resolve repository locations through `ArchitectureTestPaths` rather than the current directory.
+
+**Pattern:**
+```csharp
+[Test]
+public void GivenSelector_WhenRuleIsChecked_ThenNoViolationsExist()
+{
+    IArchRule rule = ArchRuleDefinition.Types()
+        .That().ResideInNamespace("NuciXNA.DataAccess.Content")
+        .Should().NotDependOnAnyTypesThat()
+        .ResideInNamespace("NuciXNA.DataAccess.IO");
+
+    ArchRuleAssert.FulfilsRule(Architecture, rule);
+}
+```
+
 ## Updating Dependencies
 
 ### Patch/Minor Updates
