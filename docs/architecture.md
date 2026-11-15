@@ -41,6 +41,7 @@ The library follows an **interface-and-adapter** pattern for content loading and
 
 ```
 NuciXNA.DataAccess.UnitTests
+NuciXNA.DataAccess.ArchitectureTests
          │
          ▼
 NuciXNA.DataAccess (production)
@@ -50,7 +51,7 @@ NuciXNA.DataAccess (production)
          └──► SixLabors.ImageSharp
 ```
 
-Production code depends **outward** on external libraries. The test project depends **inward** on production code.
+Production code depends **outward** on external libraries. The test projects depend **inward** on production code. The `Content` and `IO` subsystems are mutually independent and must remain free of dependency cycles.
 
 ## Runtime Topology
 

@@ -129,7 +129,6 @@ The principal runtime sequence is:
 Paths:
 - [`NuciXNA.DataAccess/Content`](NuciXNA.DataAccess/Content)
 - [`NuciXNA.DataAccess.UnitTests/Content`](NuciXNA.DataAccess.UnitTests/Content)
-
 Responsibilities:
 - Define a substitutable loading contract.
 - Adapt MonoGame pipeline and raw-file mechanisms.
@@ -284,6 +283,7 @@ Production code depends outward on MonoGame, NuciXNA.Primitives, and ImageSharp.
 ```mermaid
 flowchart RL
     Tests[NuciXNA.DataAccess.UnitTests] --> Library[NuciXNA.DataAccess]
+    ArchitectureTests[NuciXNA.DataAccess.ArchitectureTests] --> Library
     Manager[NuciContentManager] --> Contract[IContentLoader]
     Adapters[Pipeline and plain-file loaders] --> Contract
     Adapters --> MonoGame[MonoGame]
@@ -295,16 +295,20 @@ The principal dependency rules are:
 - `NuciContentManager` coordinates only `IContentLoader` methods and must not acquire direct file-system or `ContentManager` dependencies outside its standard composition overload.
 - Concrete content loaders must preserve the distinction between required `Load*` and optional `TryLoad*` operations.
 - `Bitmap` must preserve `Colour` to `Rgba32` channel ordering and its disposal boundary.
-- The test project may mock public contracts; no test helper is present in production code.
+- The content subsystem (`Content`) and bitmap subsystem (`IO`) must remain mutually independent and free of dependency cycles.
+- Test projects may mock public contracts; no test helper is present in production code, and production code must not reference a test project.
+- Production assemblies must not declare `InternalsVisibleTo`.
+
+[`DependencyArchitectureTests`](NuciXNA.DataAccess.ArchitectureTests/DependencyArchitectureTests.cs) enforces these rules against the loaded production assembly and the declared project references.
 
 ## 📦 External Dependencies
 
 | Dependency | Responsibility | Integration Boundary | Architectural Consequence |
 |------------|----------------|----------------------|---------------------------|
 | `MonoGame.Framework.DesktopGL` 3.8.4 | XNA/MonoGame asset, content, audio, and graphics types. | Content namespace. | Consumers must provide compatible live MonoGame objects for standard content initialisation. |
-| `NuciXNA.Primitives` 2.1.7 | `Colour`, `Point2D`, and `Size2D`. | `Bitmap` public API. | Bitmap API compatibility includes these external value types. |
-| `SixLabors.ImageSharp` 3.1.6 | Image decoding, encoding, buffer representation, and pixel type. | `Bitmap`. | Codec and resource semantics are delegated to ImageSharp. Restore currently reports known high- and moderate-severity vulnerabilities for this pinned version. |
-| NUnit, Moq, Microsoft.NET.Test.Sdk, NUnit3TestAdapter | Unit-test discovery, assertions, and mocking. | Test project only. | They do not ship as library dependencies. |
+| `NuciXNA.Primitives` 2.1.8 | `Colour`, `Point2D`, and `Size2D`. | `Bitmap` public API. | Bitmap API compatibility includes these external value types. |
+| `SixLabors.ImageSharp` 4.1.2 | Image decoding, encoding, buffer representation, and pixel type. | `Bitmap`. | Codec and resource semantics are delegated to ImageSharp. |
+| NUnit, Moq, Microsoft.NET.Test.Sdk, NUnit3TestAdapter, TngTech.ArchUnitNET, Microsoft.CodeAnalysis | Test discovery, assertions, mocking, compiled dependency rules, and Roslyn source analysis. | Test projects only. | They do not ship as library dependencies. |
 
 ## 🚀 Deployment and Operations
 
@@ -315,7 +319,7 @@ The distributable unit is the [`NuciXNA.DataAccess`](NuciXNA.DataAccess/NuciXNA.
 | Runtime host | Library loaded by a MonoGame application. | Host owns startup, shutdown, graphics-device lifetime, and content root. |
 | Persistent state | None. | Recovery, scaling, and backup are out of scope. |
 | CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml). | CI requires package availability, .NET 10, and apt font installation capability. |
-| Package risk | Pinned ImageSharp 3.1.6 dependency produces restore vulnerability warnings. | Dependency maintenance is an operational and security responsibility. |
+| Package risk | Dependency vulnerable-package status is verified with `dotnet list package --vulnerable --include-transitive`. | Dependency maintenance is an operational and security responsibility. |
 
 ## 🛡️ Compatibility Contracts
 
@@ -328,12 +332,14 @@ The distributable unit is the [`NuciXNA.DataAccess`](NuciXNA.DataAccess/NuciXNA.
 
 ## ✅ Testing and Verification
 
-[`NuciXNA.DataAccess.UnitTests`](NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj) contains 256 discovered NUnit cases. [`ContentLoaderTests`](NuciXNA.DataAccess.UnitTests/Content/ContentLoaderTests.cs) verifies null and broad-exception conversion plus path forwarding. [`NuciContentManagerTests`](NuciXNA.DataAccess.UnitTests/Content/NuciContentManagerTests.cs) verifies mocked loader selection, propagation, and texture placeholder branches. [`BitmapTests`](NuciXNA.DataAccess.UnitTests/IO/BitmapTests.cs) verifies construction dimensions, pixel round trips, indexer equivalence, and disposal without exception.
+[`NuciXNA.DataAccess.UnitTests`](NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj) contains 364 discovered NUnit cases. [`ContentLoaderTests`](NuciXNA.DataAccess.UnitTests/Content/ContentLoaderTests.cs) verifies null and broad-exception conversion plus path forwarding. [`NuciContentManagerTests`](NuciXNA.DataAccess.UnitTests/Content/NuciContentManagerTests.cs) verifies mocked loader selection, propagation, and texture placeholder branches. [`BitmapTests`](NuciXNA.DataAccess.UnitTests/IO/BitmapTests.cs) verifies construction dimensions, pixel round trips, indexer equivalence, and disposal without exception.
+
+[`NuciXNA.DataAccess.ArchitectureTests`](NuciXNA.DataAccess.ArchitectureTests/NuciXNA.DataAccess.ArchitectureTests.csproj) contains 78 NUnit fitness tests enforcing the documented boundaries and conventions. [`DependencyArchitectureTests`](NuciXNA.DataAccess.ArchitectureTests/DependencyArchitectureTests.cs) verifies loaded production-assembly type dependencies, subsystem cycle freedom, the absence of `InternalsVisibleTo`, production project references, and approved package references. [`ProjectConventionTests`](NuciXNA.DataAccess.ArchitectureTests/ProjectConventionTests.cs) verifies target framework, implicit usings, language version, nullable references, packability, test flags, package ordering, and solution structure. [`ProductionCodeConventionTests`](NuciXNA.DataAccess.ArchitectureTests/ProductionCodeConventionTests.cs) verifies the C# coding conventions across production sources. [`SourceFileConventionTests`](NuciXNA.DataAccess.ArchitectureTests/SourceFileConventionTests.cs) verifies one top-level type per file, exact case-sensitive filename-to-type matching, block namespaces, and the absence of `#nullable` directives. [`TestSourceConventionTests`](NuciXNA.DataAccess.ArchitectureTests/TestSourceConventionTests.cs) verifies unit-test and architecture-test source conventions.
 
 Execute the principal automated verification with:
 
 ```bash
-dotnet test NuciXNA.DataAccess.sln
+dotnet test NuciXNA.DataAccess.slnx
 ```
 
 Coverage gaps relevant to architecture:
@@ -350,7 +356,7 @@ Coverage gaps relevant to architecture:
 - **Format scope:** Raw fallback supports only `.wav` sounds and `.png` textures; `SpriteFont` is pipeline-only.
 - **Host affinity:** The standard content flow requires MonoGame desktop dependencies and a graphics device for raw textures.
 - **No asset cache policy:** Cache and disposal behaviour reside in MonoGame, custom loaders, or the host.
-- **Dependency exposure:** ImageSharp 3.1.6 restore currently reports known vulnerabilities; no mitigation is implemented in this repository state.
+- **Dependency exposure:** `dotnet list package --vulnerable --include-transitive` currently reports no vulnerable packages for any project; dependency updates and monitoring remain an operational responsibility.
 
 ## 🔧 Extension Points
 
@@ -385,6 +391,7 @@ Callers can construct `Bitmap` from dimensions, `Size2D`, or an existing ImageSh
 | Content adapters | [`NuciXNA.DataAccess/Content`](NuciXNA.DataAccess/Content) | Base, MonoGame pipeline, and plain-file implementations. |
 | Bitmap façade | [`NuciXNA.DataAccess/IO/Bitmap.cs`](NuciXNA.DataAccess/IO/Bitmap.cs) | ImageSharp adaptation and pixel API. |
 | Test project | [`NuciXNA.DataAccess.UnitTests`](NuciXNA.DataAccess.UnitTests) | NUnit unit tests and package references. |
+| Architecture test project | [`NuciXNA.DataAccess.ArchitectureTests`](NuciXNA.DataAccess.ArchitectureTests) | NUnit fitness tests enforcing dependency boundaries, project, and source-file conventions. |
 
 | CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) | GitHub Actions restore, build, and test workflow. |
 

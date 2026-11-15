@@ -17,7 +17,7 @@ namespace NuciXNA.DataAccess.Content
         /// </summary>
         /// <param name="contentPath">The path to the sound effect asset, relative to the content root.</param>
         /// <returns>The loaded <see cref="SoundEffect"/>, or <c>null</c> if loading fails.</returns>
-        SoundEffect TryLoadSoundEffect(string contentPath);
+        SoundEffect? TryLoadSoundEffect(string contentPath);
 
         /// <summary>Loads a <see cref="SpriteFont"/> from the specified content path.</summary>
         /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
@@ -30,7 +30,7 @@ namespace NuciXNA.DataAccess.Content
         /// </summary>
         /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
         /// <returns>The loaded <see cref="SpriteFont"/>, or <c>null</c> if loading fails.</returns>
-        SpriteFont TryLoadSpriteFont(string contentPath);
+        SpriteFont? TryLoadSpriteFont(string contentPath);
 
         /// <summary>Loads a <see cref="Texture2D"/> from the specified content path.</summary>
         /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
@@ -43,6 +43,6 @@ namespace NuciXNA.DataAccess.Content
         /// </summary>
         /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
         /// <returns>The loaded <see cref="Texture2D"/>, or <c>null</c> if loading fails.</returns>
-        Texture2D TryLoadTexture2D(string contentPath);
+        Texture2D? TryLoadTexture2D(string contentPath);
     }
 }

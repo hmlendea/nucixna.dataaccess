@@ -93,17 +93,24 @@ No. Only pixel-level read/write, load, and save. Use ImageSharp directly for pro
 
 ### What test framework is used?
 
-NUnit 4.6.1 with NUnit3TestAdapter.
+NUnit 5.0.0 with NUnit3TestAdapter and Moq. Architecture fitness tests use TngTech.ArchUnitNET with its NUnit adapter and Roslyn syntax analysis.
 
 ### How do I run tests?
 
 ```bash
+dotnet test NuciXNA.DataAccess.slnx
+```
+
+Or for a specific project:
+
+```bash
 dotnet test NuciXNA.DataAccess.UnitTests/NuciXNA.DataAccess.UnitTests.csproj
+dotnet test NuciXNA.DataAccess.ArchitectureTests/NuciXNA.DataAccess.ArchitectureTests.csproj
 ```
 
 ### Are there integration tests?
 
-No. Only unit tests with mocked dependencies.
+No. Only unit tests with mocked dependencies, plus architecture and fitness tests that validate compiled dependencies and conventions.
 
 ## Deployment
 

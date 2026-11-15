@@ -13,68 +13,13 @@ namespace NuciXNA.DataAccess.UnitTests.Content
     [TestFixture]
     public sealed class ContentLoaderTests
     {
-        private sealed class ThrowingContentLoader : ContentLoader
-        {
-            private readonly Exception exceptionToThrow;
-
-            public ThrowingContentLoader(Exception exceptionToThrow)
-            {
-                this.exceptionToThrow = exceptionToThrow;
-            }
-
-            public override SoundEffect LoadSoundEffect(string contentPath) => throw exceptionToThrow;
-
-            public override SpriteFont LoadSpriteFont(string contentPath) => throw exceptionToThrow;
-
-            public override Texture2D LoadTexture2D(string contentPath) => throw exceptionToThrow;
-        }
-
-        private sealed class NullReturningContentLoader : ContentLoader
-        {
-            public override SoundEffect LoadSoundEffect(string contentPath) => null;
-
-            public override SpriteFont LoadSpriteFont(string contentPath) => null;
-
-            public override Texture2D LoadTexture2D(string contentPath) => null;
-        }
-
-        private sealed class SpyContentLoader : ContentLoader
-        {
-            public string LastSoundEffectPath { get; private set; }
-
-            public string LastSpriteFontPath { get; private set; }
-
-            public string LastTexture2DPath { get; private set; }
-
-            public override SoundEffect LoadSoundEffect(string contentPath)
-            {
-                LastSoundEffectPath = contentPath;
-
-                return null;
-            }
-
-            public override SpriteFont LoadSpriteFont(string contentPath)
-            {
-                LastSpriteFontPath = contentPath;
-
-                return null;
-            }
-
-            public override Texture2D LoadTexture2D(string contentPath)
-            {
-                LastTexture2DPath = contentPath;
-
-                return null;
-            }
-        }
-
-        private ThrowingContentLoader ioExceptionLoader;
-        private ThrowingContentLoader argumentExceptionLoader;
-        private ThrowingContentLoader invalidOperationExceptionLoader;
-        private ThrowingContentLoader outOfMemoryExceptionLoader;
-        private ThrowingContentLoader nullReferenceExceptionLoader;
-        private NullReturningContentLoader nullReturningLoader;
-        private SpyContentLoader spyLoader;
+        private ThrowingContentLoader ioExceptionLoader = null!;
+        private ThrowingContentLoader argumentExceptionLoader = null!;
+        private ThrowingContentLoader invalidOperationExceptionLoader = null!;
+        private ThrowingContentLoader outOfMemoryExceptionLoader = null!;
+        private ThrowingContentLoader nullReferenceExceptionLoader = null!;
+        private NullReturningContentLoader nullReturningLoader = null!;
+        private SpyContentLoader spyLoader = null!;
 
         [SetUp]
         public void SetUp()
@@ -87,8 +32,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             nullReturningLoader = new NullReturningContentLoader();
             spyLoader = new SpyContentLoader();
         }
-
-        // TryLoadSoundEffect — IOException
 
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
@@ -104,8 +47,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSoundEffectThrowsIOException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(ioExceptionLoader.TryLoadSoundEffect(path), Is.Null);
 
-        // TryLoadSoundEffect — ArgumentException
-
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsArgumentException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
@@ -115,8 +56,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsArgumentException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(argumentExceptionLoader.TryLoadSoundEffect(path), Is.Null);
-
-        // TryLoadSoundEffect — InvalidOperationException
 
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
@@ -128,8 +67,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSoundEffectThrowsInvalidOperationException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(invalidOperationExceptionLoader.TryLoadSoundEffect(path), Is.Null);
 
-        // TryLoadSoundEffect — OutOfMemoryException
-
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsOutOfMemoryException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
@@ -140,8 +77,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSoundEffectThrowsOutOfMemoryException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(outOfMemoryExceptionLoader.TryLoadSoundEffect(path), Is.Null);
 
-        // TryLoadSoundEffect — NullReferenceException
-
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsNullReferenceException_WhenTryLoadSoundEffectIsCalled_ThenNoExceptionIsThrown(string path)
@@ -151,8 +86,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("sounds/background")]
         public void GivenLoadSoundEffectThrowsNullReferenceException_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReferenceExceptionLoader.TryLoadSoundEffect(path), Is.Null);
-
-        // TryLoadSoundEffect — null return
 
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
@@ -166,8 +99,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSoundEffectReturnsNull_WhenTryLoadSoundEffectIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReturningLoader.TryLoadSoundEffect(path), Is.Null);
 
-        // TryLoadSoundEffect — path forwarding
-
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
         [TestCase("audio/effects/explosion")]
@@ -179,8 +110,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 spyLoader.LastSoundEffectPath,
                 Is.EqualTo(path));
         }
-
-        // TryLoadSpriteFont — IOException
 
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
@@ -196,8 +125,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSpriteFontThrowsIOException_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(ioExceptionLoader.TryLoadSpriteFont(path), Is.Null);
 
-        // TryLoadSpriteFont — ArgumentException
-
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
         public void GivenLoadSpriteFontThrowsArgumentException_WhenTryLoadSpriteFontIsCalled_ThenNoExceptionIsThrown(string path)
@@ -207,8 +134,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("fonts/ui")]
         public void GivenLoadSpriteFontThrowsArgumentException_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(argumentExceptionLoader.TryLoadSpriteFont(path), Is.Null);
-
-        // TryLoadSpriteFont — InvalidOperationException
 
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
@@ -220,8 +145,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSpriteFontThrowsInvalidOperationException_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(invalidOperationExceptionLoader.TryLoadSpriteFont(path), Is.Null);
 
-        // TryLoadSpriteFont — OutOfMemoryException
-
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
         public void GivenLoadSpriteFontThrowsOutOfMemoryException_WhenTryLoadSpriteFontIsCalled_ThenNoExceptionIsThrown(string path)
@@ -232,8 +155,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSpriteFontThrowsOutOfMemoryException_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(outOfMemoryExceptionLoader.TryLoadSpriteFont(path), Is.Null);
 
-        // TryLoadSpriteFont — NullReferenceException
-
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
         public void GivenLoadSpriteFontThrowsNullReferenceException_WhenTryLoadSpriteFontIsCalled_ThenNoExceptionIsThrown(string path)
@@ -243,8 +164,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("fonts/ui")]
         public void GivenLoadSpriteFontThrowsNullReferenceException_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReferenceExceptionLoader.TryLoadSpriteFont(path), Is.Null);
-
-        // TryLoadSpriteFont — null return
 
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
@@ -258,8 +177,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadSpriteFontReturnsNull_WhenTryLoadSpriteFontIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReturningLoader.TryLoadSpriteFont(path), Is.Null);
 
-        // TryLoadSpriteFont — path forwarding
-
         [TestCase("testFont")]
         [TestCase("fonts/ui")]
         [TestCase("fonts/hud/score")]
@@ -271,8 +188,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 spyLoader.LastSpriteFontPath,
                 Is.EqualTo(path));
         }
-
-        // TryLoadTexture2D — IOException
 
         [TestCase("testTexture")]
         [TestCase("textures/player")]
@@ -288,8 +203,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadTexture2DThrowsIOException_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(ioExceptionLoader.TryLoadTexture2D(path), Is.Null);
 
-        // TryLoadTexture2D — ArgumentException
-
         [TestCase("testTexture")]
         [TestCase("textures/player")]
         public void GivenLoadTexture2DThrowsArgumentException_WhenTryLoadTexture2DIsCalled_ThenNoExceptionIsThrown(string path)
@@ -299,8 +212,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("textures/player")]
         public void GivenLoadTexture2DThrowsArgumentException_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(argumentExceptionLoader.TryLoadTexture2D(path), Is.Null);
-
-        // TryLoadTexture2D — InvalidOperationException
 
         [TestCase("testTexture")]
         [TestCase("textures/player")]
@@ -312,8 +223,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadTexture2DThrowsInvalidOperationException_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(invalidOperationExceptionLoader.TryLoadTexture2D(path), Is.Null);
 
-        // TryLoadTexture2D — OutOfMemoryException
-
         [TestCase("testTexture")]
         [TestCase("textures/player")]
         public void GivenLoadTexture2DThrowsOutOfMemoryException_WhenTryLoadTexture2DIsCalled_ThenNoExceptionIsThrown(string path)
@@ -324,8 +233,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadTexture2DThrowsOutOfMemoryException_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(outOfMemoryExceptionLoader.TryLoadTexture2D(path), Is.Null);
 
-        // TryLoadTexture2D — NullReferenceException
-
         [TestCase("testTexture")]
         [TestCase("textures/player")]
         public void GivenLoadTexture2DThrowsNullReferenceException_WhenTryLoadTexture2DIsCalled_ThenNoExceptionIsThrown(string path)
@@ -335,8 +242,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         [TestCase("textures/player")]
         public void GivenLoadTexture2DThrowsNullReferenceException_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReferenceExceptionLoader.TryLoadTexture2D(path), Is.Null);
-
-        // TryLoadTexture2D — null return
 
         [TestCase("testTexture")]
         [TestCase("textures/player")]
@@ -350,8 +255,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         public void GivenLoadTexture2DReturnsNull_WhenTryLoadTexture2DIsCalled_ThenNullIsReturned(string path)
             => Assert.That(nullReturningLoader.TryLoadTexture2D(path), Is.Null);
 
-        // TryLoadTexture2D — path forwarding
-
         [TestCase("testTexture")]
         [TestCase("textures/player")]
         [TestCase("sprites/enemies/goblin")]
@@ -363,8 +266,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
                 spyLoader.LastTexture2DPath,
                 Is.EqualTo(path));
         }
-
-        // TryLoad* — additional exception types
 
         [TestCase("testSoundEffect")]
         [TestCase("sounds/background")]
@@ -446,8 +347,6 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             Assert.That(loader.TryLoadSoundEffect(path), Is.Null);
         }
 
-        // TryLoad* — path edge cases
-
         [TestCase(".")]
         [TestCase("..")]
         [TestCase("./relative")]
@@ -490,10 +389,8 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             Assert.That(spyLoader.LastTexture2DPath, Is.EqualTo(path));
         }
 
-        // TryLoad* — multiple calls independence
-
         [Test]
-        public void GivenMultipleCallsToTryLoadSoundEffect_EachCallIsIndependent()
+        public void GivenMultipleCalls_WhenTryLoadSoundEffectIsCalled_ThenLastPathIsRetained()
         {
             spyLoader.TryLoadSoundEffect("first");
             spyLoader.TryLoadSoundEffect("second");
@@ -503,7 +400,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         }
 
         [Test]
-        public void GivenMultipleCallsToTryLoadSpriteFont_EachCallIsIndependent()
+        public void GivenMultipleCalls_WhenTryLoadSpriteFontIsCalled_ThenLastPathIsRetained()
         {
             spyLoader.TryLoadSpriteFont("first");
             spyLoader.TryLoadSpriteFont("second");
@@ -513,7 +410,7 @@ namespace NuciXNA.DataAccess.UnitTests.Content
         }
 
         [Test]
-        public void GivenMultipleCallsToTryLoadTexture2D_EachCallIsIndependent()
+        public void GivenMultipleCalls_WhenTryLoadTexture2DIsCalled_ThenLastPathIsRetained()
         {
             spyLoader.TryLoadTexture2D("first");
             spyLoader.TryLoadTexture2D("second");
@@ -522,22 +419,19 @@ namespace NuciXNA.DataAccess.UnitTests.Content
             Assert.That(spyLoader.LastTexture2DPath, Is.EqualTo("third"));
         }
 
-        // TryLoad* — exception suppression verification
-
         [Test]
-        public void GivenLoadThrowsException_WhenTryLoadIsCalled_ExceptionIsFullySuppressed()
+        public void GivenLoadThrowsException_WhenTryLoadIsCalled_ThenExceptionIsFullySuppressed()
         {
             InvalidOperationException exception = new("Test exception");
             ThrowingContentLoader loader = new(exception);
 
-            // Should not throw, should return null
-            SoundEffect soundResult = loader.TryLoadSoundEffect("test");
+            SoundEffect? soundResult = loader.TryLoadSoundEffect("test");
             Assert.That(soundResult, Is.Null);
 
-            SpriteFont fontResult = loader.TryLoadSpriteFont("test");
+            SpriteFont? fontResult = loader.TryLoadSpriteFont("test");
             Assert.That(fontResult, Is.Null);
 
-            Texture2D textureResult = loader.TryLoadTexture2D("test");
+            Texture2D? textureResult = loader.TryLoadTexture2D("test");
             Assert.That(textureResult, Is.Null);
         }
     }

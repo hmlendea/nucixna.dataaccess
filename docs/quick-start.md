@@ -4,14 +4,14 @@
 
 - .NET 10 SDK
 - MonoGame 3.8.4+ (DesktopGL)
-- NuciXNA.Primitives 2.1.7+
+- NuciXNA.Primitives 2.1.8+
 
 ## Installation
 
 ### NuGet Package
 
 ```bash
-dotnet add package NuciXNA.DataAccess --version 4.0.4
+dotnet add package NuciXNA.DataAccess --version 4.0.5
 ```
 
 ### From Source

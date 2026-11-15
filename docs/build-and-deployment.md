@@ -9,10 +9,10 @@
 dotnet restore
 
 # Build solution
-dotnet build NuciXNA.DataAccess.sln
+dotnet build NuciXNA.DataAccess.slnx
 
 # Run tests
-dotnet test NuciXNA.DataAccess.sln
+dotnet test NuciXNA.DataAccess.slnx
 ```
 
 ### CI Pipeline
@@ -47,7 +47,7 @@ The distributable unit is the **NuGet package** produced from `NuciXNA.DataAcces
 **Package metadata:**
 - Target framework: `net10.0`
 - Package ID: `NuciXNA.DataAccess`
-- Version: From `<Version>` in csproj (currently 4.0.4)
+- Version: From `<Version>` in csproj (currently 4.0.5)
 - License: GPL-3.0-or-later
 - Authors: Horațiu Mlendea
 - Repository: https://github.com/hmlendea/nucixna.dataaccess
@@ -87,13 +87,14 @@ Publishing to NuGet.org is a manual or separate CI step not defined in this repo
 | Dependency | Source |
 |------------|--------|
 | `MonoGame.Framework.DesktopGL` 3.8.4 | NuGet |
-| `NuciXNA.Primitives` 2.1.7 | NuGet |
-| `SixLabors.ImageSharp` 3.1.6 | NuGet |
+| `NuciXNA.Primitives` 2.1.8 | NuGet |
+| `SixLabors.ImageSharp` 4.1.2 | NuGet |
 
 ## Known Build Issues
 
-1. **ImageSharp vulnerabilities:** Restore reports known high- and moderate-severity vulnerabilities for pinned version 3.1.6
-2. **Font installation:** CI requires `ttf-mscorefonts-installer` for SpriteFont rendering in tests
+1. **Font installation:** CI requires `ttf-mscorefonts-installer` for SpriteFont rendering in tests
+
+Dependency vulnerability status is monitored with `dotnet list package --vulnerable --include-transitive`, which currently reports no vulnerable packages for any project.
 
 ## Related Documentation
 

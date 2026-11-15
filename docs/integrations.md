@@ -21,7 +21,7 @@
 
 | Aspect | Details |
 |--------|---------|
-| **Package** | `SixLabors.ImageSharp` 3.1.6 |
+| **Package** | `SixLabors.ImageSharp` 4.1.2 |
 | **Direction** | Outbound |
 | **Usage** | Image decoding, encoding, pixel buffer (`Image<Rgba32>`), format detection |
 | **Coupling** | Hard dependency — `Bitmap` wraps `Image<Rgba32>` |
@@ -37,7 +37,7 @@
 
 | Aspect | Details |
 |--------|---------|
-| **Package** | `NuciXNA.Primitives` 2.1.7 |
+| **Package** | `NuciXNA.Primitives` 2.1.8 |
 | **Direction** | Outbound |
 | **Usage** | `Colour` (ARGB), `Point2D`, `Size2D` value types |
 | **Coupling** | Hard dependency — public API uses these types |
@@ -110,7 +110,7 @@ No DI container — manual composition.
 
 | NuciXNA.DataAccess | MonoGame | ImageSharp | NuciXNA.Primitives | .NET |
 |-------------------|----------|------------|-------------------|------|
-| 4.0.4 | 3.8.4 | 3.1.6 | 2.1.7 | 10.0 |
+| 4.0.5 | 3.8.4 | 4.1.2 | 2.1.8 | 10.0 |
 
 ## Breaking Change Risks
 

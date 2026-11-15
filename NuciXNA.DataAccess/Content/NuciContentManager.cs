@@ -13,10 +13,10 @@ namespace NuciXNA.DataAccess.Content
     public sealed class NuciContentManager
     {
         private static readonly Lock syncRoot = new();
-        private static volatile NuciContentManager instance;
+        private static volatile NuciContentManager? instance;
 
-        private IContentLoader pipelineContentLoader;
-        private IContentLoader plainFileContentLoader;
+        private IContentLoader? pipelineContentLoader;
+        private IContentLoader? plainFileContentLoader;
 
         /// <summary>Gets the singleton instance of <see cref="NuciContentManager"/>.</summary>
         public static NuciContentManager Instance
@@ -40,7 +40,7 @@ namespace NuciXNA.DataAccess.Content
         /// requested texture cannot be found. Set to <c>null</c> or an empty string to
         /// disable placeholder substitution.
         /// </summary>
-        public static string MissingTexturePlaceholder { get; set; }
+        public static string? MissingTexturePlaceholder { get; set; }
 
         private NuciContentManager()
         {
@@ -79,9 +79,9 @@ namespace NuciXNA.DataAccess.Content
         /// <returns>The loaded <see cref="SoundEffect"/>.</returns>
         public SoundEffect LoadSoundEffect(string contentPath)
         {
-            SoundEffect soundEffect = pipelineContentLoader.TryLoadSoundEffect(contentPath);
+            SoundEffect? soundEffect = pipelineContentLoader!.TryLoadSoundEffect(contentPath);
 
-            soundEffect ??= plainFileContentLoader.LoadSoundEffect(contentPath);
+            soundEffect ??= plainFileContentLoader!.LoadSoundEffect(contentPath);
 
             return soundEffect;
         }
@@ -92,7 +92,7 @@ namespace NuciXNA.DataAccess.Content
         /// <param name="contentPath">The path to the sprite font asset, relative to the content root.</param>
         /// <returns>The loaded <see cref="SpriteFont"/>.</returns>
         public SpriteFont LoadSpriteFont(string contentPath)
-            => pipelineContentLoader.LoadSpriteFont(contentPath);
+            => pipelineContentLoader!.LoadSpriteFont(contentPath);
 
         /// <summary>
         /// Loads a <see cref="Texture2D"/>. Attempts the pipeline loader first; falls back to
@@ -102,26 +102,26 @@ namespace NuciXNA.DataAccess.Content
         /// </summary>
         /// <param name="contentPath">The path to the texture asset, relative to the content root.</param>
         /// <returns>The loaded <see cref="Texture2D"/>, or <c>null</c> if no asset could be found.</returns>
-        public Texture2D LoadTexture2D(string contentPath)
+        public Texture2D? LoadTexture2D(string contentPath)
         {
-            Texture2D texture2d = pipelineContentLoader.TryLoadTexture2D(contentPath);
+            Texture2D? texture2d = pipelineContentLoader!.TryLoadTexture2D(contentPath);
 
             if (texture2d is null)
             {
                 if (string.IsNullOrWhiteSpace(MissingTexturePlaceholder))
                 {
-                    texture2d = plainFileContentLoader.LoadTexture2D(contentPath);
+                    texture2d = plainFileContentLoader!.LoadTexture2D(contentPath);
                 }
                 else
                 {
-                    texture2d = plainFileContentLoader.TryLoadTexture2D(contentPath);
+                    texture2d = plainFileContentLoader!.TryLoadTexture2D(contentPath);
                 }
             }
 
             if (texture2d is null &&
                 !string.IsNullOrWhiteSpace(MissingTexturePlaceholder))
             {
-                texture2d = pipelineContentLoader.LoadTexture2D(MissingTexturePlaceholder);
+                texture2d = pipelineContentLoader!.LoadTexture2D(MissingTexturePlaceholder);
             }
 
             return texture2d;
