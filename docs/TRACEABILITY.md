@@ -27,6 +27,7 @@ This document is an evidence-based map of current public behaviour to implementa
 | Bitmap tests | [`UnitTests/IO/BitmapTests.cs`](../NuciXNA.DataAccess.UnitTests/IO/BitmapTests.cs) | Dimensions, pixel mutation/access, indexers, disposal. |
 | Architecture tests | [`ArchitectureTests`](../NuciXNA.DataAccess.ArchitectureTests) | Dependency boundaries, subsystem cycle freedom, project references, and project and source-file conventions. |
 | Automation | [`dotnet.yml`](../.github/workflows/dotnet.yml) | Restore, build, and test on `master` push and pull request. |
+| Security automation | [`security.yml`](../.github/workflows/security.yml) | CodeQL C# analysis and vulnerable-package check on `master` push, pull request, and a weekly schedule. |
 
 ## Feature To Code And Test Map
 
