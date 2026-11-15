@@ -1,6 +1,7 @@
 [![Donate](https://img.shields.io/badge/-%E2%99%A5%20Donate-%23ff69b4)](https://hmlendea.go.ro/funding)
 [![Latest Release](https://img.shields.io/github/v/release/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/releases/latest)
 [![Build Status](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/dotnet.yml)
+[![Security Scan](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/security.yml/badge.svg)](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/security.yml)
 [![NuGet](https://img.shields.io/nuget/v/NuciXNA.DataAccess)](https://nuget.org/packages/NuciXNA.DataAccess)
 [![License](https://img.shields.io/github/license/hmlendea/nucixna.dataaccess)](https://github.com/hmlendea/nucixna.dataaccess/blob/master/LICENSE)
 
@@ -16,11 +17,13 @@ Data access utilities for the NuciXNA ecosystem, built on top of MonoGame/XNA.
 - [Installation](#installation)
 - [Development](#development)
 - [Dependencies](#dependencies)
+- [GitHub Actions](#github-actions)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security](#security)
+- [Support](#support)
 - [Project Engagement](#project-engagement)
 - [License](#license)
 
@@ -125,6 +128,15 @@ dotnet pack NuciXNA.DataAccess -c Release
 | `NuciXNA.Primitives` | 2.1.8 | Runtime | `Colour`, `Point2D`, and `Size2D` used by the bitmap utility |
 | `SixLabors.ImageSharp` | 4.1.2 | Runtime | Pixel-level image decoding and encoding for `Bitmap` |
 
+## ⚙️ GitHub Actions
+
+| Workflow | Purpose | What it does |
+|----------|---------|--------------|
+| [ dotnet.yml ](https://github.com/hmlendea/nucixna.dataaccess/blob/master/.github/workflows/dotnet.yml) | .NET CI | Restores, builds, and tests the solution with .NET 10 on push and pull request targeting the `master` branch, installing Microsoft core fonts before validation |
+| [ security.yml ](https://github.com/hmlendea/nucixna.dataaccess/blob/master/.github/workflows/security.yml) | Security Scan | Runs CodeQL analysis for C# and checks for vulnerable packages with `dotnet list package --vulnerable --include-transitive`, triggered on push and pull request targeting `master` plus a weekly schedule |
+| [ github-release.yml ](https://github.com/hmlendea/nucixna.dataaccess/blob/master/.github/workflows/github-release.yml) | GitHub Release | Packs the NuGet package on release publication, publishes it as a release asset with its SHA256 checksum |
+| [ nuget-release.yml ](https://github.com/hmlendea/nucixna.dataaccess/blob/master/.github/workflows/nuget-release.yml) | NuGet.org Release | Packs and publishes the NuGet package to NuGet.org on release publication |
+
 ## 🗂️ Project Structure
 
 The solution contains the following projects:
@@ -185,6 +197,10 @@ See the [contributing guidelines](./CONTRIBUTING.md) for details on how to repor
 NuciXNA.DataAccess follows coordinated disclosure for security vulnerabilities.
 
 For information on reporting security vulnerabilities, see [SECURITY.md](./SECURITY.md).
+
+## 💬 Support
+
+For support, please [open an issue](https://github.com/hmlendea/nucixna.dataaccess/issues).
 
 ## 💝 Project Engagement
 

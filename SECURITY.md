@@ -8,6 +8,9 @@ This document describes the security maintenance scope, vulnerability reporting 
 - [Reporting a Vulnerability](#reporting-a-vulnerability)
 - [Scope](#scope)
 - [Disclosure Policy](#disclosure-policy)
+- [Automated Security Scanning](#automated-security-scanning)
+- [Safe Harbour](#safe-harbour)
+- [Recognition](#recognition)
 
 ## 🛡️ Supported Versions
 
@@ -27,6 +30,8 @@ To report a vulnerability:
 - Contact the maintainers directly via GitHub issues or the repository contact information
 
 ## 📌 Scope
+
+The original maintainers are not responsible for changes, modifications, or security issues introduced by downstream forks.
 
 The subsequent report categories are in scope for this repository:
 - Vulnerabilities in the `NuciXNA.DataAccess` library code (`NuciXNA.DataAccess/` project)
@@ -48,6 +53,14 @@ This project follows coordinated disclosure:
 2. A remediation plan is prepared and validated.
 3. Public disclosure is published after a fix, mitigation, or agreed risk decision is available.
 4. Credit is attributed in accordance with reporter preference and project policy.
+
+## 🔍 Automated Security Scanning
+
+This repository runs automated security scans on the `NuciXNA.DataAccess` .NET codebase and its dependencies. The scan includes:
+- **CodeQL analysis for C#**
+- **Vulnerable package check** (`dotnet list package --vulnerable --include-transitive`)
+
+Results are published to the [Security](https://github.com/hmlendea/nucixna.dataaccess/security) tab and the [Actions](https://github.com/hmlendea/nucixna.dataaccess/actions/workflows/security.yml) workflow page.
 
 ## 🧾 Safe Harbour
 

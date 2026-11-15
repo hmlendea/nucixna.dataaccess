@@ -38,6 +38,31 @@ dotnet test NuciXNA.DataAccess.slnx
 - `apt` package installation capability (for fonts)
 - NuGet package availability
 
+### Security Scan Pipeline
+
+**File:** [`.github/workflows/security.yml`](../.github/workflows/security.yml)
+
+**Triggers:**
+- Push to `master`
+- Pull request to `master`
+- Weekly schedule (Sunday at 00:00 UTC)
+
+**Environment:** `ubuntu-latest`
+
+**Steps:**
+1. Checkout repository
+2. Setup .NET 10.x
+3. Restore dependencies
+4. Check for vulnerable packages (`dotnet list package --vulnerable --include-transitive`)
+5. Initialize CodeQL analysis for `csharp`
+6. Build (no restore)
+7. Perform CodeQL analysis and upload results to GitHub code scanning
+
+**Requirements:**
+- .NET 10 SDK
+- Public repository (GitHub Code Scanning)
+- `security-events: write` permission for SARIF upload
+
 ## Deployment
 
 ### Artifact

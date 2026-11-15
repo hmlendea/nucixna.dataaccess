@@ -90,6 +90,8 @@
 
 **Recommendation:** Regularly update dependencies and monitor security advisories.
 
+Dependency vulnerability status is verified automatically by the [`security.yml`](../.github/workflows/security.yml) workflow, which runs `dotnet list package --vulnerable --include-transitive` and CodeQL analysis for C# on pushes and pull requests to `master`, plus a weekly schedule.
+
 ## Secure Usage Guidelines
 
 1. **Validate all paths** in the host application before passing to `NuciXNA.DataAccess`
@@ -102,4 +104,4 @@
 
 - [Configuration](./configuration.md) — Documents the minimal programmatic configuration
 - [Error Handling](./error-handling.md) — Describes exception behaviours
-- [Root SECURITY.md](../SECURITY.md) — Repository-level security policy (if present)
+- [Root SECURITY.md](../SECURITY.md) — Repository-level security policy

@@ -312,13 +312,13 @@ The principal dependency rules are:
 
 ## 🚀 Deployment and Operations
 
-The distributable unit is the [`NuciXNA.DataAccess`](NuciXNA.DataAccess/NuciXNA.DataAccess.csproj) NuGet library targeting `net10.0`; there is no service, executable, container, database, or deployment topology in this repository. The solution builds Debug and Release configurations for Any CPU. The tracked GitHub Actions workflow runs on `ubuntu-latest` for pushes and pull requests to `master`, restores/builds/tests with .NET 10, and installs Microsoft core fonts before validation.
+The distributable unit is the [`NuciXNA.DataAccess`](NuciXNA.DataAccess/NuciXNA.DataAccess.csproj) NuGet library targeting `net10.0`; there is no service, executable, container, database, or deployment topology in this repository. The solution builds Debug and Release configurations for Any CPU. The tracked GitHub Actions workflows run on `ubuntu-latest`: the build workflow triggers on pushes and pull requests to `master`, restores/builds/tests with .NET 10, and installs Microsoft core fonts before validation; the security workflow adds CodeQL C# analysis and a vulnerable-package check on pushes, pull requests, and a weekly schedule.
 
 | Concern | Current Design | Architectural Consequence |
 |---------|----------------|---------------------------|
 | Runtime host | Library loaded by a MonoGame application. | Host owns startup, shutdown, graphics-device lifetime, and content root. |
 | Persistent state | None. | Recovery, scaling, and backup are out of scope. |
-| CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml). | CI requires package availability, .NET 10, and apt font installation capability. |
+| CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) for build and test; [`.github/workflows/security.yml`](.github/workflows/security.yml) for CodeQL and dependency scanning. | CI requires package availability, .NET 10, and apt font installation capability. |
 | Package risk | Dependency vulnerable-package status is verified with `dotnet list package --vulnerable --include-transitive`. | Dependency maintenance is an operational and security responsibility. |
 
 ## 🛡️ Compatibility Contracts
@@ -394,6 +394,7 @@ Callers can construct `Bitmap` from dimensions, `Size2D`, or an existing ImageSh
 | Architecture test project | [`NuciXNA.DataAccess.ArchitectureTests`](NuciXNA.DataAccess.ArchitectureTests) | NUnit fitness tests enforcing dependency boundaries, project, and source-file conventions. |
 
 | CI | [`.github/workflows/dotnet.yml`](.github/workflows/dotnet.yml) | GitHub Actions restore, build, and test workflow. |
+| Security scanning | [`.github/workflows/security.yml`](.github/workflows/security.yml) | GitHub Actions CodeQL C# analysis and vulnerable-package check workflow. |
 
 ## 📚 Related Documentation
 
